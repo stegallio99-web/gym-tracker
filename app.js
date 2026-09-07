@@ -81,7 +81,8 @@ function renderHome() {
   grid.innerHTML = '';
   state.config.sessions.forEach(session => {
     const last = getLastSession(session.id);
-    const card = document.createElement('div');
+    const card = document.createElement('button');
+    card.type = 'button';
     card.className = 'session-card';
     card.style.setProperty('--card-color', session.color);
     const dayLabel = session.name.replace('Day ', 'D').replace(/ —.*/, '');
@@ -119,7 +120,8 @@ function renderExerciseList() {
     const lastLog = getLastExerciseLog(ex.id);
     const done = sets.length > 0;
 
-    const item = document.createElement('div');
+    const item = document.createElement('button');
+    item.type = 'button';
     item.className = 'ex-list-item' + (done ? ' done' : '');
 
     // Check circle: shows sets done / target sets
@@ -423,7 +425,8 @@ function renderPickerItems(exercises) {
     const lastStr = lastLog
       ? lastLog.sets.map(s => `${s.kg}kg×${s.reps}`).join(' · ')
       : 'Nessun dato';
-    const item = document.createElement('div');
+    const item = document.createElement('button');
+    item.type = 'button';
     item.className = 'picker-item';
     item.innerHTML = `
       <div class="picker-item-name">${ex.name_it}</div>
@@ -529,7 +532,8 @@ function renderStoricoScreen() {
           ? Math.max(...allLogs.flatMap(l => l.sets.map(s => s.kg)))
           : null;
 
-        const item = document.createElement('div');
+        const item = document.createElement('button');
+        item.type = 'button';
         item.className = 'storico-item';
 
         let lastStr = '';
