@@ -18,22 +18,68 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+html {
+  /* Prevent iOS font-size adjustment on orientation change */
+  -webkit-text-size-adjust: 100%;
+}
+
 html, body {
   height: 100%;
+  /* Fallback for iOS Safari where 100vh includes browser chrome */
+  height: -webkit-fill-available;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
   font-size: 16px;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
+  /* Prevent pull-to-refresh and bounce on iOS */
+  position: fixed;
+  width: 100%;
+}
+
+/* Prevent auto-zoom on input focus (iOS zooms when font-size < 16px) */
+input, select, textarea {
+  font-size: 16px !important;
+}
+
+/* All interactive elements: no delay, no double-tap zoom */
+button,
+.ex-list-item,
+.session-card,
+.storico-item,
+.picker-item,
+.history-exercise-item,
+.set-edit-btn,
+.add-set-btn,
+.free-btn,
+.storico-btn,
+.icon-btn,
+.num-btn,
+.rest-adj-btn,
+.rest-skip,
+.chart-tab,
+.log-entry,
+.nav-ex-btn,
+.week-btn,
+.save-btn,
+.modal-cancel,
+.modal-confirm {
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* ===== SCREENS ===== */
 .screen {
   display: none;
   flex-direction: column;
-  height: 100dvh;
+  height: 100%;
+  width: 100%;
   overflow: hidden;
+  position: absolute;
+  top: 0; left: 0;
 }
 .screen.active { display: flex; }
 
@@ -77,6 +123,7 @@ html, body {
 .session-grid {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 16px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -126,8 +173,10 @@ html, body {
 .home-actions {
   display: flex;
   gap: 10px;
-  padding: 0 16px calc(16px + var(--safe-bottom));
+  padding: 10px 16px calc(12px + var(--safe-bottom));
   flex-shrink: 0;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
 }
 .free-btn {
   flex: 2;
@@ -180,6 +229,7 @@ html, body {
 .ex-list {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 12px 16px calc(16px + var(--safe-bottom));
   display: flex;
   flex-direction: column;
@@ -259,6 +309,7 @@ html, body {
 .exercise-card {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -427,6 +478,7 @@ html, body {
 .storico-list {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 0 16px calc(16px + var(--safe-bottom));
 }
 .storico-group { margin-bottom: 20px; }
@@ -463,6 +515,7 @@ html, body {
 .history-content {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 16px;
 }
 
@@ -519,6 +572,7 @@ html, body {
 .free-content {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -536,6 +590,7 @@ html, body {
 .settings-content {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -606,8 +661,9 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: 85dvh;
+  max-height: 85%;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .modal.hidden { display: none; }
 .modal-title { font-size: 1rem; font-weight: 700; }
@@ -665,7 +721,8 @@ html, body {
 
 .picker-list {
   overflow-y: auto;
-  max-height: 50dvh;
+  -webkit-overflow-scrolling: touch;
+  max-height: 50%;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -683,7 +740,7 @@ html, body {
 /* ===== TOAST ===== */
 .toast {
   position: fixed;
-  bottom: calc(80px + var(--safe-bottom));
+  bottom: calc(72px + var(--safe-bottom));
   left: 50%;
   transform: translateX(-50%);
   background: var(--bg3);
