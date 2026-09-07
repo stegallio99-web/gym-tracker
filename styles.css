@@ -52,9 +52,11 @@ button,
 .free-btn,
 .storico-btn,
 .icon-btn,
+.back-btn,
 .num-btn,
 .rest-adj-btn,
 .rest-skip,
+.rest-set-btn,
 .chart-tab,
 .log-entry,
 .nav-ex-btn,
@@ -471,11 +473,11 @@ button,
   color: #000;
   border: none;
   border-radius: var(--radius-sm);
-  padding: 8px 12px;
-  font-size: 0.85rem;
-  font-weight: 700;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
-  flex-shrink: 0;
+  width: 100%;
   touch-action: manipulation;
   -webkit-user-select: none;
   user-select: none;
@@ -709,16 +711,21 @@ button,
   flex-direction: column;
   gap: 16px;
   max-height: 85%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   box-sizing: border-box;
 }
 .modal.hidden { display: none; }
-.modal-title { font-size: 1rem; font-weight: 700; }
+.modal-title { font-size: 1rem; font-weight: 700; flex-shrink: 0; }
 .modal-text { font-size: 0.9rem; color: var(--text2); }
-.modal-body { display: flex; flex-direction: column; gap: 14px; }
-.modal-actions { display: flex; gap: 10px; }
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+}
+.modal-actions { display: flex; gap: 10px; flex-shrink: 0; }
 .modal-cancel, .modal-confirm {
   flex: 1;
   padding: 12px;
@@ -788,7 +795,8 @@ button,
 .picker-list {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  max-height: 50%;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
