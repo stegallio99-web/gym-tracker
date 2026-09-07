@@ -21,17 +21,6 @@
     <button class="icon-btn" id="btn-settings" aria-label="Impostazioni">&#9881;</button>
   </header>
 
-  <div class="week-bar">
-    <span class="week-label">Settimana</span>
-    <div class="week-selector">
-      <button class="week-btn active" data-week="1">W1</button>
-      <button class="week-btn" data-week="2">W2</button>
-      <button class="week-btn" data-week="3">W3</button>
-      <button class="week-btn" data-week="4">W4</button>
-    </div>
-    <span id="rir-label" class="rir-badge">RIR 4</span>
-  </div>
-
   <div class="session-grid" id="session-grid">
     <!-- populated by JS -->
   </div>
@@ -90,6 +79,12 @@
     <div class="rest-timer" id="rest-timer" hidden>
       <div class="rest-label">Riposo</div>
       <div class="rest-countdown" id="rest-countdown">2:00</div>
+      <div class="rest-adjust">
+        <button class="rest-adj-btn" data-delta="-30">-30s</button>
+        <button class="rest-adj-btn" data-delta="-15">-15s</button>
+        <button class="rest-adj-btn" data-delta="15">+15s</button>
+        <button class="rest-adj-btn" data-delta="30">+30s</button>
+      </div>
       <button class="rest-skip" id="btn-skip-rest">Salta</button>
     </div>
   </div>
@@ -165,6 +160,12 @@
           <button class="num-btn" data-target="modal-kg" data-delta="-2.5">-2.5</button>
           <input type="number" id="modal-kg" class="number-input" value="0" min="0" step="0.5">
           <button class="num-btn" data-target="modal-kg" data-delta="2.5">+2.5</button>
+        </div>
+        <div class="number-input-row coarse">
+          <button class="num-btn secondary" data-target="modal-kg" data-delta="-5">-5</button>
+          <button class="num-btn secondary" data-target="modal-kg" data-delta="-1.25">-1.25</button>
+          <button class="num-btn secondary" data-target="modal-kg" data-delta="1.25">+1.25</button>
+          <button class="num-btn secondary" data-target="modal-kg" data-delta="5">+5</button>
         </div>
       </div>
       <div class="input-group">

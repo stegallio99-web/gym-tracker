@@ -71,43 +71,7 @@ html, body {
 }
 .icon-btn:active { background: var(--bg3); }
 
-/* ===== WEEK BAR ===== */
-.week-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.week-label { color: var(--text2); font-size: 0.8rem; }
-.week-selector { display: flex; gap: 4px; }
-.week-btn {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  color: var(--text2);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
-  cursor: pointer;
-}
-.week-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #000;
-}
-.rir-badge {
-  margin-left: auto;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  color: var(--accent);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
+/* week-bar removed */
 
 /* ===== SESSION GRID ===== */
 .session-grid {
@@ -425,6 +389,23 @@ html, body {
 }
 .rest-label { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; }
 .rest-countdown { font-size: 2.5rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.rest-adjust {
+  display: flex;
+  gap: 6px;
+}
+.rest-adj-btn {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  border-radius: var(--radius-sm);
+  padding: 6px 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rest-adj-btn:active { background: var(--bg); color: var(--accent); }
+
 .rest-skip {
   background: none;
   border: 1px solid var(--border);
@@ -433,6 +414,7 @@ html, body {
   padding: 6px 16px;
   font-size: 0.8rem;
   cursor: pointer;
+  width: 100%;
 }
 
 /* removed: exercise-nav-btns (now list-based) */
@@ -663,13 +645,23 @@ html, body {
   border: 1px solid var(--border);
   color: var(--accent);
   border-radius: var(--radius-sm);
-  padding: 8px 14px;
-  font-size: 0.9rem;
+  padding: 10px 16px;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .num-btn:active { background: var(--bg); }
+.number-input-row.coarse { margin-top: 6px; gap: 6px; }
+.num-btn.secondary {
+  flex: 1;
+  padding: 7px 4px;
+  font-size: 0.78rem;
+  color: var(--text2);
+  text-align: center;
+}
+.num-btn.secondary:active { color: var(--accent); }
 
 .picker-list {
   overflow-y: auto;

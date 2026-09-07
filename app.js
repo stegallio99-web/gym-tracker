@@ -67,12 +67,10 @@ const storage = {
 
 // ===== INIT =====
 async function init() {
-  state.currentWeek = storage.loadWeek();
   state.logs = storage.loadLogs();
   const res = await fetch('config.json');
   state.config = await res.json();
   renderHome();
-  updateWeekUI();
   setupEventListeners();
   if (gh.token && gh.repo) syncLogsFromGitHub();
 }
@@ -806,25 +804,9 @@ function showToast(msg, type = '') {
   t.className = 'toast' + (type ? ' ' + type : '');
   setTimeout(() => t.classList.add('hidden'), 2500);
 }
-function updateWeekUI() {
-  document.querySelectorAll('.week-btn').forEach(btn => {
-    btn.classList.toggle('active', parseInt(btn.dataset.week) === state.currentWeek);
-  });
-  const rir = state.config?.rir_progression?.[`week${state.currentWeek}`] ?? '—';
-  document.getElementById('rir-label').textContent = `RIR ${rir}`;
-}
 
 // ===== EVENTS =====
 function setupEventListeners() {
-  // Week
-  document.querySelectorAll('.week-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      state.currentWeek = parseInt(btn.dataset.week);
-      storage.saveWeek(state.currentWeek);
-      updateWeekUI();
-    });
-  });
-
   // Home
   document.getElementById('btn-settings').addEventListener('click', () => {
     document.getElementById('input-token').value = gh.token;
@@ -862,6 +844,14 @@ function setupEventListeners() {
   document.getElementById('btn-skip-rest').addEventListener('click', () => {
     clearInterval(state.restTimer);
     document.getElementById('rest-timer').hidden = true;
+  });
+
+  document.querySelectorAll('.rest-adj-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const delta = parseInt(btn.dataset.delta);
+      state.restRemaining = Math.max(5, state.restRemaining + delta);
+      updateRestDisplay();
+    });
   });
 
   // History
