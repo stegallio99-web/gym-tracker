@@ -1,0 +1,430 @@
+{
+  "rir_progression": {
+    "week1": 4,
+    "week2": 3,
+    "week3": 2,
+    "week4": 1
+  },
+  "sessions": [
+    {
+      "id": "day1",
+      "name": "Day 1 — PUSH",
+      "color": "#e74c3c",
+      "exercises": [
+        {
+          "id": "bench_press_barbell",
+          "name_it": "Panca piana bilanciere",
+          "name_en": "Bench Press (Barbell)",
+          "sets": 5,
+          "reps_min": 6,
+          "reps_max": 8,
+          "rest_seconds": 180,
+          "rir_week3": 2,
+          "note": "Retrazione scapole, discesa 2s",
+          "equipment": "barbell"
+        },
+        {
+          "id": "seated_db_shoulder_press",
+          "name_it": "Overhead press manubri seduto",
+          "name_en": "Seated Dumbbell Shoulder Press",
+          "sets": 3,
+          "reps_min": 6,
+          "reps_max": 8,
+          "rest_seconds": 150,
+          "rir_week3": 2,
+          "note": "Schienale 85-90°",
+          "equipment": "dumbbell"
+        },
+        {
+          "id": "low_cable_fly",
+          "name_it": "Croci ai cavi bassi",
+          "name_en": "Low Cable Fly",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 12,
+          "rest_seconds": 90,
+          "rir_week3": 1,
+          "note": "Traiettoria a hug, stretch massimo",
+          "equipment": "cable"
+        },
+        {
+          "id": "overhead_tricep_ext_ez",
+          "name_it": "Overhead extension EZ (French press)",
+          "name_en": "Overhead Tricep Extension (EZ Bar)",
+          "sets": 3,
+          "reps_min": 8,
+          "reps_max": 10,
+          "rest_seconds": 90,
+          "rir_week3": 1,
+          "note": "Gomiti fissi, capo lungo in stretch",
+          "equipment": "ez_bar"
+        },
+        {
+          "id": "cable_lateral_raise",
+          "name_it": "Alzate laterali cavo",
+          "name_en": "Cable Lateral Raise",
+          "sets": 3,
+          "reps_min": 12,
+          "reps_max": 15,
+          "rest_seconds": 60,
+          "rir_week3": 1,
+          "note": "Cavo dietro il corpo, sali fino a 90°",
+          "equipment": "cable"
+        },
+        {
+          "id": "tricep_rope_pushdown",
+          "name_it": "Pushdown corda",
+          "name_en": "Tricep Rope Pushdown",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 12,
+          "rest_seconds": 60,
+          "rir_week3": 0,
+          "last_set_failure": true,
+          "note": "Ultima serie a cedimento",
+          "equipment": "cable"
+        },
+        {
+          "id": "hanging_knee_raise",
+          "name_it": "Hanging knee raise",
+          "name_en": "Hanging Knee Raise",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 12,
+          "rest_seconds": 60,
+          "rir_week3": null,
+          "note": "Anti-estensione, controllo eccentrica",
+          "equipment": "bodyweight"
+        }
+      ]
+    },
+    {
+      "id": "day2",
+      "name": "Day 2 — PULL",
+      "color": "#3498db",
+      "exercises": [
+        {
+          "id": "lat_pulldown_wide",
+          "name_it": "Lat machine presa prona larga",
+          "name_en": "Lat Pulldown (Wide Grip)",
+          "sets": 4,
+          "reps_min": 6,
+          "reps_max": 10,
+          "rest_seconds": 180,
+          "rir_week3": 2,
+          "note": "Tira allo sterno alto, eccentrica 2s",
+          "equipment": "cable"
+        },
+        {
+          "id": "lat_pulldown_neutral",
+          "name_it": "Lat machine presa neutra",
+          "name_en": "Lat Pulldown (Neutral Grip)",
+          "sets": 2,
+          "reps_min": 8,
+          "reps_max": 10,
+          "rest_seconds": 120,
+          "rir_week3": 1,
+          "note": "Presa a V o parallela",
+          "equipment": "cable"
+        },
+        {
+          "id": "dumbbell_pullover",
+          "name_it": "Pullover con manubrio su panca piana",
+          "name_en": "Dumbbell Pullover",
+          "sets": 2,
+          "reps_min": 10,
+          "reps_max": 12,
+          "rest_seconds": 90,
+          "rir_week3": 1,
+          "note": "Trasverso o longitudinale, stretch max",
+          "equipment": "dumbbell"
+        },
+        {
+          "id": "cable_face_pull",
+          "name_it": "Face pull ai cavi",
+          "name_en": "Cable Face Pull",
+          "sets": 3,
+          "reps_min": 15,
+          "reps_max": 15,
+          "rest_seconds": 60,
+          "rir_week3": 1,
+          "note": "Corda alta, gomiti larghi",
+          "equipment": "cable"
+        },
+        {
+          "id": "ez_bar_curl",
+          "name_it": "Curl bilanciere EZ",
+          "name_en": "EZ Bar Curl",
+          "sets": 3,
+          "reps_min": 8,
+          "reps_max": 10,
+          "rest_seconds": 90,
+          "rir_week3": 1,
+          "note": "Gomiti fermi",
+          "equipment": "ez_bar"
+        },
+        {
+          "id": "hammer_curl",
+          "name_it": "Curl martello manubri",
+          "name_en": "Hammer Curl",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 12,
+          "rest_seconds": 60,
+          "rir_week3": 0,
+          "last_set_failure": true,
+          "note": "Ultima serie a cedimento",
+          "equipment": "dumbbell"
+        },
+        {
+          "id": "pallof_press",
+          "name_it": "Pallof press ai cavi",
+          "name_en": "Pallof Press",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 10,
+          "rest_seconds": 60,
+          "rir_week3": null,
+          "bilateral": false,
+          "note": "Anti-rotazione, cavo altezza sterno — 10 per lato",
+          "equipment": "cable"
+        }
+      ]
+    },
+    {
+      "id": "day3",
+      "name": "Day 3 — LOWER A",
+      "color": "#2ecc71",
+      "exercises": [
+        {
+          "id": "barbell_back_squat",
+          "name_it": "Back squat bilanciere",
+          "name_en": "Barbell Back Squat",
+          "sets": 4,
+          "reps_min": 5,
+          "reps_max": 8,
+          "rest_seconds": 180,
+          "rir_week3": 2,
+          "note": "Discesa controllata, profondità coscia parallela",
+          "equipment": "barbell"
+        },
+        {
+          "id": "bulgarian_split_squat",
+          "name_it": "Bulgarian split squat manubri",
+          "name_en": "Bulgarian Split Squat",
+          "sets": 3,
+          "reps_min": 8,
+          "reps_max": 8,
+          "rest_seconds": 120,
+          "rir_week3": 1,
+          "bilateral": false,
+          "note": "Piede posteriore ~60 cm dietro, busto leggermente in avanti — 8 per lato",
+          "equipment": "dumbbell"
+        },
+        {
+          "id": "leg_extension",
+          "name_it": "Leg extension",
+          "name_en": "Leg Extension",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 12,
+          "rest_seconds": 90,
+          "rir_week3": 0,
+          "last_set_failure": true,
+          "note": "Pausa 1s in contrazione",
+          "equipment": "machine"
+        },
+        {
+          "id": "seated_leg_curl",
+          "name_it": "Leg curl seduto",
+          "name_en": "Seated Leg Curl",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 12,
+          "rest_seconds": 90,
+          "rir_week3": 1,
+          "note": "Punta piede in dorsi-flessione",
+          "equipment": "machine"
+        },
+        {
+          "id": "standing_calf_raise",
+          "name_it": "Standing calf raise",
+          "name_en": "Standing Calf Raise",
+          "sets": 4,
+          "reps_min": 8,
+          "reps_max": 10,
+          "rest_seconds": 90,
+          "rir_week3": 0,
+          "note": "Range completo, pausa 1s in stretch",
+          "equipment": "machine"
+        },
+        {
+          "id": "rkc_plank",
+          "name_it": "Plank RKC",
+          "name_en": "RKC Plank",
+          "sets": 3,
+          "reps_min": null,
+          "reps_max": null,
+          "duration_seconds": 30,
+          "rest_seconds": 60,
+          "rir_week3": null,
+          "optional": true,
+          "note": "Opzionale — contrazione massima globale, 20-30s",
+          "equipment": "bodyweight"
+        }
+      ]
+    },
+    {
+      "id": "day4",
+      "name": "Day 4 — UPPER",
+      "color": "#9b59b6",
+      "exercises": [
+        {
+          "id": "incline_db_press",
+          "name_it": "Panca inclinata manubri 30°",
+          "name_en": "Incline Dumbbell Press",
+          "sets": 4,
+          "reps_min": 8,
+          "reps_max": 10,
+          "rest_seconds": 150,
+          "rir_week3": 1,
+          "note": "Angolo basso, gomiti a 45°",
+          "equipment": "dumbbell"
+        },
+        {
+          "id": "barbell_row",
+          "name_it": "Rematore bilanciere presa prona",
+          "name_en": "Barbell Row",
+          "sets": 4,
+          "reps_min": 8,
+          "reps_max": 10,
+          "rest_seconds": 150,
+          "rir_week3": 1,
+          "note": "Busto ~45°, tira all'ombelico",
+          "equipment": "barbell"
+        },
+        {
+          "id": "chest_supported_row",
+          "name_it": "Chest-supported row macchina, presa neutra",
+          "name_en": "Chest Supported Row (Machine)",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 12,
+          "rest_seconds": 90,
+          "rir_week3": 1,
+          "note": "Petto poggiato, tira ai fianchi",
+          "equipment": "machine"
+        },
+        {
+          "id": "ez_skull_crusher",
+          "name_it": "Skull crusher EZ / JM press",
+          "name_en": "EZ Bar Skull Crusher",
+          "sets": 3,
+          "reps_min": 8,
+          "reps_max": 10,
+          "rest_seconds": 90,
+          "rir_week3": 1,
+          "note": "Discesa dietro la testa",
+          "equipment": "ez_bar"
+        },
+        {
+          "id": "pec_deck",
+          "name_it": "Pec deck",
+          "name_en": "Pec Deck / Machine Chest Fly",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 12,
+          "rest_seconds": 0,
+          "rir_week3": 1,
+          "superset_with": "db_lateral_raise",
+          "superset_label": "5A",
+          "note": "Pausa 1s in contrazione — superset con 5B",
+          "equipment": "machine"
+        },
+        {
+          "id": "db_lateral_raise",
+          "name_it": "Alzate laterali manubri",
+          "name_en": "Dumbbell Lateral Raise",
+          "sets": 3,
+          "reps_min": 12,
+          "reps_max": 15,
+          "rest_seconds": 90,
+          "rir_week3": 1,
+          "superset_with": "pec_deck",
+          "superset_label": "5B",
+          "note": "Gomiti leggermente flessi — riposo 90s dopo ogni round",
+          "equipment": "dumbbell"
+        },
+        {
+          "id": "preacher_curl_ez",
+          "name_it": "Panca Scott bilanciere EZ",
+          "name_en": "Preacher Curl (EZ Bar)",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 12,
+          "rest_seconds": 60,
+          "rir_week3": 0,
+          "last_set_failure": true,
+          "note": "Non estendere completamente il gomito in basso",
+          "equipment": "ez_bar"
+        }
+      ]
+    },
+    {
+      "id": "day5",
+      "name": "Day 5 — LOWER B",
+      "color": "#f39c12",
+      "exercises": [
+        {
+          "id": "rdl_barbell",
+          "name_it": "Romanian Deadlift (RDL)",
+          "name_en": "Romanian Deadlift (Barbell)",
+          "sets": 4,
+          "reps_min": 8,
+          "reps_max": 10,
+          "rest_seconds": 180,
+          "rir_week3": 2,
+          "note": "Ginocchia morbide, spinta anche indietro, stretch massimo",
+          "equipment": "barbell"
+        },
+        {
+          "id": "barbell_hip_thrust",
+          "name_it": "Hip thrust bilanciere",
+          "name_en": "Barbell Hip Thrust",
+          "sets": 3,
+          "reps_min": 8,
+          "reps_max": 10,
+          "rest_seconds": 120,
+          "rir_week3": 1,
+          "note": "Contrazione glutei 1s in alto",
+          "equipment": "barbell"
+        },
+        {
+          "id": "nordic_hamstring_curl",
+          "name_it": "Nordic curl (o leg curl unilaterale)",
+          "name_en": "Nordic Hamstring Curl",
+          "sets": 3,
+          "reps_min": 5,
+          "reps_max": 8,
+          "rest_seconds": 90,
+          "rir_week3": 1,
+          "note": "Discesa controllata 3-5s; risalita con spinta mani se serve",
+          "equipment": "bodyweight"
+        },
+        {
+          "id": "seated_calf_raise",
+          "name_it": "Seated calf raise",
+          "name_en": "Seated Calf Raise",
+          "sets": 4,
+          "reps_min": 10,
+          "reps_max": 12,
+          "rest_seconds": 60,
+          "rir_week3": 0,
+          "last_set_failure": true,
+          "note": "",
+          "equipment": "machine"
+        }
+      ]
+    }
+  ]
+}

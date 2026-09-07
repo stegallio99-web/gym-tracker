@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f0f0f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Gym">
+  <title>Gym Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== HOME SCREEN ===== -->
+<div id="screen-home" class="screen active">
+  <header class="app-header">
+    <h1>Gym Tracker</h1>
+    <button class="icon-btn" id="btn-settings" aria-label="Impostazioni">&#9881;</button>
+  </header>
+
+  <div class="week-bar">
+    <span class="week-label">Settimana</span>
+    <div class="week-selector">
+      <button class="week-btn active" data-week="1">W1</button>
+      <button class="week-btn" data-week="2">W2</button>
+      <button class="week-btn" data-week="3">W3</button>
+      <button class="week-btn" data-week="4">W4</button>
+    </div>
+    <span id="rir-label" class="rir-badge">RIR 4</span>
+  </div>
+
+  <div class="session-grid" id="session-grid">
+    <!-- populated by JS -->
+  </div>
+
+  <button class="free-btn" id="btn-free-workout">
+    <span class="free-icon">+</span>
+    Allenamento libero
+  </button>
+</div>
+
+<!-- ===== WORKOUT SCREEN ===== -->
+<div id="screen-workout" class="screen">
+  <header class="app-header">
+    <button class="icon-btn back-btn" id="btn-back-home" aria-label="Indietro">&#8592;</button>
+    <h2 id="workout-title">Day 1 — PUSH</h2>
+    <button class="icon-btn" id="btn-finish-workout">&#10003;</button>
+  </header>
+
+  <div class="exercise-nav" id="exercise-nav">
+    <!-- dot indicators -->
+  </div>
+
+  <div class="exercise-card" id="exercise-card">
+    <div class="exercise-header">
+      <div class="ex-number" id="ex-number">1 / 7</div>
+      <h3 class="ex-name" id="ex-name"></h3>
+      <div class="ex-target" id="ex-target"></div>
+      <div class="ex-note" id="ex-note"></div>
+    </div>
+
+    <div class="last-session" id="last-session">
+      <!-- last session reference -->
+    </div>
+
+    <div class="sets-log" id="sets-log">
+      <!-- set rows -->
+    </div>
+
+    <button class="add-set-btn" id="btn-add-set">+ Aggiungi serie</button>
+
+    <div class="rest-timer" id="rest-timer" hidden>
+      <div class="rest-label">Riposo</div>
+      <div class="rest-countdown" id="rest-countdown">2:00</div>
+      <button class="rest-skip" id="btn-skip-rest">Salta</button>
+    </div>
+  </div>
+
+  <div class="exercise-nav-btns">
+    <button class="nav-ex-btn" id="btn-prev-ex">&#8592; Prec</button>
+    <button class="nav-ex-btn primary" id="btn-next-ex">Succ &#8594;</button>
+  </div>
+</div>
+
+<!-- ===== HISTORY SCREEN ===== -->
+<div id="screen-history" class="screen">
+  <header class="app-header">
+    <button class="icon-btn back-btn" id="btn-back-from-history" aria-label="Indietro">&#8592;</button>
+    <h2 id="history-title">Progressione</h2>
+  </header>
+  <div class="history-content" id="history-content">
+    <!-- chart + log list -->
+  </div>
+</div>
+
+<!-- ===== FREE WORKOUT SCREEN ===== -->
+<div id="screen-free" class="screen">
+  <header class="app-header">
+    <button class="icon-btn back-btn" id="btn-back-from-free">&#8592;</button>
+    <h2>Allenamento libero</h2>
+    <button class="icon-btn" id="btn-finish-free">&#10003;</button>
+  </header>
+  <div class="free-content">
+    <div class="sets-log" id="free-log"></div>
+    <button class="add-set-btn" id="btn-add-free-exercise">+ Aggiungi esercizio</button>
+  </div>
+</div>
+
+<!-- ===== SETTINGS SCREEN ===== -->
+<div id="screen-settings" class="screen">
+  <header class="app-header">
+    <button class="icon-btn back-btn" id="btn-back-from-settings">&#8592;</button>
+    <h2>Impostazioni</h2>
+  </header>
+  <div class="settings-content">
+    <div class="settings-group">
+      <label class="settings-label">GitHub Token (PAT)</label>
+      <input type="password" id="input-token" class="settings-input" placeholder="ghp_...">
+      <p class="settings-hint">Token con scope <code>repo</code> — salvato solo su questo dispositivo</p>
+    </div>
+    <div class="settings-group">
+      <label class="settings-label">Repository</label>
+      <input type="text" id="input-repo" class="settings-input" placeholder="username/gym-tracker">
+    </div>
+    <button class="save-btn" id="btn-save-settings">Salva</button>
+    <div class="settings-status" id="settings-status"></div>
+    <hr class="divider">
+    <h3 class="settings-section-title">Statistiche</h3>
+    <div class="stats-grid" id="stats-grid"></div>
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+<div id="modal-overlay" class="modal-overlay hidden">
+  <!-- Set input modal -->
+  <div id="modal-set" class="modal">
+    <h3 class="modal-title">Logga serie</h3>
+    <div class="modal-body">
+      <div class="input-group">
+        <label>Peso (kg)</label>
+        <div class="number-input-row">
+          <button class="num-btn" data-target="modal-kg" data-delta="-2.5">-2.5</button>
+          <input type="number" id="modal-kg" class="number-input" value="0" min="0" step="0.5">
+          <button class="num-btn" data-target="modal-kg" data-delta="2.5">+2.5</button>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Ripetizioni</label>
+        <div class="number-input-row">
+          <button class="num-btn" data-target="modal-reps" data-delta="-1">-1</button>
+          <input type="number" id="modal-reps" class="number-input" value="8" min="1" step="1">
+          <button class="num-btn" data-target="modal-reps" data-delta="1">+1</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" id="btn-modal-cancel">Annulla</button>
+      <button class="modal-confirm" id="btn-modal-confirm">Conferma</button>
+    </div>
+  </div>
+
+  <!-- Exercise picker modal (free workout) -->
+  <div id="modal-picker" class="modal hidden">
+    <h3 class="modal-title">Scegli esercizio</h3>
+    <input type="text" id="picker-search" class="settings-input" placeholder="Cerca...">
+    <div class="picker-list" id="picker-list"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" id="btn-picker-cancel">Annulla</button>
+    </div>
+  </div>
+
+  <!-- Confirm finish modal -->
+  <div id="modal-confirm-finish" class="modal hidden">
+    <h3 class="modal-title">Termina allenamento?</h3>
+    <p class="modal-text" id="modal-finish-text"></p>
+    <div class="modal-actions">
+      <button class="modal-cancel" id="btn-finish-cancel">Continua</button>
+      <button class="modal-confirm" id="btn-finish-confirm">Salva e chiudi</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div id="toast" class="toast hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
