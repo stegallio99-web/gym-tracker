@@ -9,7 +9,7 @@ const state = {
   allCurrentSets: {},         // {exerciseId: [{kg, reps}]} for entire workout
   currentWeek: 1,
   restTimer: null,
-  restRemaining: 0,
+  restEnd: 0,
   restExerciseId: null,
   modalContext: null,
   freeWorkout: [],
@@ -293,28 +293,29 @@ function confirmSet() {
 }
 
 // ===== REST TIMER =====
-function startRestTimer(seconds, exerciseId) {
+function startRestTimer(seconds) {
   clearInterval(state.restTimer);
-  state.restRemaining = seconds;
-  state.restExerciseId = exerciseId;
+  state.restEnd = Date.now() + seconds * 1000;
   const timerEl = document.getElementById('rest-timer');
   timerEl.hidden = false;
   updateRestDisplay();
 
   state.restTimer = setInterval(() => {
-    state.restRemaining--;
-    updateRestDisplay();
-    if (state.restRemaining <= 0) {
+    const remaining = Math.ceil((state.restEnd - Date.now()) / 1000);
+    if (remaining <= 0) {
       clearInterval(state.restTimer);
       timerEl.hidden = true;
       showToast('Riposo finito!', 'success');
+    } else {
+      updateRestDisplay();
     }
-  }, 1000);
+  }, 500);
 }
 
 function updateRestDisplay() {
-  const m = Math.floor(state.restRemaining / 60);
-  const s = state.restRemaining % 60;
+  const remaining = Math.max(0, Math.ceil((state.restEnd - Date.now()) / 1000));
+  const m = Math.floor(remaining / 60);
+  const s = remaining % 60;
   document.getElementById('rest-countdown').textContent = `${m}:${s.toString().padStart(2, '0')}`;
 }
 
@@ -853,8 +854,9 @@ function setupEventListeners() {
   document.querySelectorAll('.rest-adj-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const delta = Number(btn.dataset.delta);
-      const current = Number(state.restRemaining) || 0;
-      state.restRemaining = Math.max(10, current + delta);
+      const remaining = Math.max(0, Math.ceil((state.restEnd - Date.now()) / 1000));
+      const newRemaining = Math.max(10, remaining + delta);
+      state.restEnd = Date.now() + newRemaining * 1000;
       updateRestDisplay();
     });
   });
