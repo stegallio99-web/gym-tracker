@@ -79,7 +79,15 @@
 
   <div class="rest-timer" id="rest-timer" hidden>
     <div class="rest-label">Riposo</div>
-    <div class="rest-countdown" id="rest-countdown">2:00</div>
+    <div class="rest-countdown-row">
+      <div class="rest-countdown" id="rest-countdown">2:00</div>
+      <button class="rest-edit-btn" id="btn-rest-edit" aria-label="Modifica tempo">&#9998;</button>
+    </div>
+    <div class="rest-edit-row" id="rest-edit-row" hidden>
+      <select id="rest-edit-min" class="rest-select"></select>
+      <span class="rest-sep">:</span>
+      <select id="rest-edit-sec" class="rest-select"></select>
+    </div>
     <div class="rest-adjust">
       <button class="rest-adj-btn" data-delta="-30">-30s</button>
       <button class="rest-adj-btn" data-delta="-15">-15s</button>
@@ -168,7 +176,7 @@
       </div>
       <div class="input-group">
         <label>Ripetizioni</label>
-        <div class="reps-grid">
+        <div class="reps-grid" style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:8px">
           <button class="num-btn" style="grid-area:1/1/2/2" data-target="modal-reps" data-delta="-1">-1</button>
           <input type="number" id="modal-reps" class="number-input" style="grid-area:1/2/2/3" value="8" min="1" step="1">
           <button class="num-btn" style="grid-area:1/3/2/4" data-target="modal-reps" data-delta="1">+1</button>

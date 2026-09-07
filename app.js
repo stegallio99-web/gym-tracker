@@ -849,7 +849,34 @@ function setupEventListeners() {
   document.getElementById('btn-skip-rest').addEventListener('click', () => {
     clearInterval(state.restTimer);
     document.getElementById('rest-timer').hidden = true;
+    document.getElementById('rest-edit-row').hidden = true;
   });
+
+  // Populate wheel selects
+  const minSel = document.getElementById('rest-edit-min');
+  const secSel = document.getElementById('rest-edit-sec');
+  for (let m = 0; m <= 9; m++) minSel.add(new Option(m, m));
+  for (let s = 0; s < 60; s++) secSel.add(new Option(s.toString().padStart(2, '0'), s));
+
+  document.getElementById('btn-rest-edit').addEventListener('click', () => {
+    const row = document.getElementById('rest-edit-row');
+    row.hidden = !row.hidden;
+    if (!row.hidden) {
+      const rem = Math.max(0, Math.ceil((state.restEnd - Date.now()) / 1000));
+      minSel.value = Math.floor(rem / 60);
+      secSel.value = rem % 60;
+    }
+  });
+
+  function applyRestEdit() {
+    const total = Number(minSel.value) * 60 + Number(secSel.value);
+    if (total > 0) {
+      state.restEnd = Date.now() + total * 1000;
+      updateRestDisplay();
+    }
+  }
+  minSel.addEventListener('change', applyRestEdit);
+  secSel.addEventListener('change', applyRestEdit);
 
   document.querySelectorAll('.rest-adj-btn').forEach(btn => {
     btn.addEventListener('click', () => {

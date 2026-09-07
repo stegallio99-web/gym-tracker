@@ -446,7 +446,40 @@ button,
   box-sizing: border-box;
 }
 .rest-label { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; }
+.rest-countdown-row { display: flex; align-items: center; gap: 12px; }
 .rest-countdown { font-size: 2.5rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.rest-edit-btn {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.rest-edit-btn:active { color: var(--accent); }
+.rest-edit-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+.rest-select {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  font-size: 1.4rem !important;
+  font-weight: 700;
+  padding: 8px 12px;
+  text-align: center;
+  flex: 1;
+}
+.rest-sep { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
 .rest-adjust {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
