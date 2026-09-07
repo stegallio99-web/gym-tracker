@@ -852,8 +852,9 @@ function setupEventListeners() {
 
   document.querySelectorAll('.rest-adj-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const delta = parseInt(btn.dataset.delta);
-      state.restRemaining = Math.max(5, state.restRemaining + delta);
+      const delta = Number(btn.dataset.delta);
+      const current = Number(state.restRemaining) || 0;
+      state.restRemaining = Math.max(10, current + delta);
       updateRestDisplay();
     });
   });
