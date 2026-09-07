@@ -42,33 +42,41 @@
   </button>
 </div>
 
-<!-- ===== WORKOUT SCREEN ===== -->
+<!-- ===== EXERCISE LIST (after choosing session) ===== -->
 <div id="screen-workout" class="screen">
   <header class="app-header">
     <button class="icon-btn back-btn" id="btn-back-home" aria-label="Indietro">&#8592;</button>
     <h2 id="workout-title">Day 1 — PUSH</h2>
-    <button class="icon-btn" id="btn-finish-workout">&#10003;</button>
+    <button class="icon-btn" id="btn-finish-workout" title="Termina">&#10003;</button>
   </header>
 
-  <div class="exercise-nav" id="exercise-nav">
-    <!-- dot indicators -->
+  <div class="session-progress-bar" id="session-progress-bar">
+    <div class="session-progress-fill" id="session-progress-fill"></div>
   </div>
 
-  <div class="exercise-card" id="exercise-card">
+  <div class="ex-list" id="ex-list">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- ===== EXERCISE DETAIL (logging sets) ===== -->
+<div id="screen-exercise" class="screen">
+  <header class="app-header">
+    <button class="icon-btn back-btn" id="btn-back-to-list" aria-label="Indietro">&#8592;</button>
+    <h2 id="ex-detail-name" class="ex-detail-name-header"></h2>
+  </header>
+
+  <div class="exercise-card">
     <div class="exercise-header">
-      <div class="ex-number" id="ex-number">1 / 7</div>
-      <h3 class="ex-name" id="ex-name"></h3>
-      <div class="ex-target" id="ex-target"></div>
-      <div class="ex-note" id="ex-note"></div>
+      <div class="ex-target" id="ex-detail-target"></div>
+      <div class="ex-note" id="ex-detail-note"></div>
     </div>
 
-    <div class="last-session" id="last-session">
+    <div class="last-session" id="ex-detail-last">
       <!-- last session reference -->
     </div>
 
-    <div class="sets-log" id="sets-log">
-      <!-- set rows -->
-    </div>
+    <div class="sets-log" id="ex-detail-sets-log"></div>
 
     <button class="add-set-btn" id="btn-add-set">+ Aggiungi serie</button>
 
@@ -78,11 +86,6 @@
       <button class="rest-skip" id="btn-skip-rest">Salta</button>
     </div>
   </div>
-
-  <div class="exercise-nav-btns">
-    <button class="nav-ex-btn" id="btn-prev-ex">&#8592; Prec</button>
-    <button class="nav-ex-btn primary" id="btn-next-ex">Succ &#8594;</button>
-  </div>
 </div>
 
 <!-- ===== HISTORY SCREEN ===== -->
@@ -91,9 +94,7 @@
     <button class="icon-btn back-btn" id="btn-back-from-history" aria-label="Indietro">&#8592;</button>
     <h2 id="history-title">Progressione</h2>
   </header>
-  <div class="history-content" id="history-content">
-    <!-- chart + log list -->
-  </div>
+  <div class="history-content" id="history-content"></div>
 </div>
 
 <!-- ===== FREE WORKOUT SCREEN ===== -->

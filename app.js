@@ -3,16 +3,17 @@
 // ===== STATE =====
 const state = {
   config: null,
-  logs: [],           // [{date, sessionId, sessionName, exercises: [{exerciseId, sets:[{kg,reps}]}]}]
+  logs: [],
   currentSession: null,
-  currentExIndex: 0,
-  currentSets: [],    // sets logged for current exercise this session
-  allCurrentSets: {}, // {exerciseId: [{kg, reps}]} for the whole workout
+  activeExercise: null,       // exercise object currently open in screen-exercise
+  allCurrentSets: {},         // {exerciseId: [{kg, reps}]} for entire workout
   currentWeek: 1,
   restTimer: null,
   restRemaining: 0,
-  modalContext: null, // {mode: 'set'|'edit', setIndex, exerciseId}
-  freeWorkout: [],    // [{exerciseId, name, sets:[]}]
+  restExerciseId: null,
+  modalContext: null,
+  freeWorkout: [],
+  historyBackScreen: 'screen-workout',
 };
 
 // ===== GITHUB API =====
@@ -56,9 +57,7 @@ const gh = {
 
 // ===== STORAGE =====
 const storage = {
-  saveLogs(logs) {
-    localStorage.setItem('gym_logs', JSON.stringify(logs));
-  },
+  saveLogs(logs) { localStorage.setItem('gym_logs', JSON.stringify(logs)); },
   loadLogs() {
     try { return JSON.parse(localStorage.getItem('gym_logs') || '[]'); } catch { return []; }
   },
@@ -70,19 +69,15 @@ const storage = {
 async function init() {
   state.currentWeek = storage.loadWeek();
   state.logs = storage.loadLogs();
-
   const res = await fetch('config.json');
   state.config = await res.json();
-
   renderHome();
   updateWeekUI();
   setupEventListeners();
-
-  // Try to load logs from GitHub in background
   if (gh.token && gh.repo) syncLogsFromGitHub();
 }
 
-// ===== RENDER HOME =====
+// ===== HOME =====
 function renderHome() {
   const grid = document.getElementById('session-grid');
   grid.innerHTML = '';
@@ -91,9 +86,10 @@ function renderHome() {
     const card = document.createElement('div');
     card.className = 'session-card';
     card.style.setProperty('--card-color', session.color);
+    const dayLabel = session.name.replace('Day ', 'D').replace(/ —.*/, '');
+    const typeLabel = session.name.split('—')[1]?.trim() || '';
     card.innerHTML = `
-      <div class="session-card-name">${session.name.replace('Day ', 'D').replace(' —', '')}</div>
-      <div class="session-card-sub">${session.name.split('—')[1]?.trim() || ''}</div>
+      <div class="session-card-name">${dayLabel} — ${typeLabel}</div>
       <div class="session-card-meta">${session.exercises.length} esercizi</div>
       ${last ? `<div class="session-card-last">${formatDateShort(last.date)}</div>` : ''}
     `;
@@ -102,78 +98,121 @@ function renderHome() {
   });
 }
 
-// ===== SESSION =====
+// ===== SESSION — EXERCISE LIST =====
 function startSession(session) {
   state.currentSession = session;
-  state.currentExIndex = 0;
-  state.allCurrentSets = {};
-  session.exercises.forEach(ex => { state.allCurrentSets[ex.id] = []; });
-
+  state.activeExercise = null;
+  // Preserve existing sets if resuming same session today
+  if (!state.allCurrentSets._sessionId || state.allCurrentSets._sessionId !== session.id) {
+    state.allCurrentSets = { _sessionId: session.id };
+    session.exercises.forEach(ex => { state.allCurrentSets[ex.id] = []; });
+  }
   document.getElementById('workout-title').textContent = session.name;
-  renderExerciseNav();
-  renderCurrentExercise();
+  renderExerciseList();
   showScreen('screen-workout');
 }
 
-function renderExerciseNav() {
-  const nav = document.getElementById('exercise-nav');
-  nav.innerHTML = '';
-  state.currentSession.exercises.forEach((ex, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'ex-dot' + (i === state.currentExIndex ? ' current' : '')
-      + (state.allCurrentSets[ex.id]?.length > 0 ? ' done' : '');
-    dot.addEventListener('click', () => { state.currentExIndex = i; renderCurrentExercise(); renderExerciseNav(); });
-    nav.appendChild(dot);
+function renderExerciseList() {
+  const list = document.getElementById('ex-list');
+  list.innerHTML = '';
+
+  state.currentSession.exercises.forEach(ex => {
+    const sets = state.allCurrentSets[ex.id] || [];
+    const lastLog = getLastExerciseLog(ex.id);
+    const done = sets.length > 0;
+
+    const item = document.createElement('div');
+    item.className = 'ex-list-item' + (done ? ' done' : '');
+
+    // Check circle: shows sets done / target sets
+    const checkContent = done ? `${sets.length}/${ex.sets}` : ex.sets;
+
+    // Last weight summary
+    let lastStr = '';
+    if (lastLog) {
+      const maxKg = Math.max(...lastLog.sets.map(s => s.kg));
+      lastStr = `<div class="ex-list-last">Ultima: ${lastLog.sets.map(s => `${s.kg}kg×${s.reps}`).join(' · ')}</div>`;
+    } else {
+      lastStr = `<div class="ex-list-last-empty">Nessun dato precedente</div>`;
+    }
+
+    const repsStr = ex.reps_min === ex.reps_max
+      ? `${ex.reps_min} rip`
+      : (ex.reps_min && ex.reps_max ? `${ex.reps_min}-${ex.reps_max} rip` : `${ex.duration_seconds}s`);
+    const supersetTag = ex.superset_label ? `<span class="superset-badge">${ex.superset_label}</span>` : '';
+
+    item.innerHTML = `
+      <div class="ex-list-check">${checkContent}</div>
+      <div class="ex-list-body">
+        <div class="ex-list-name">${supersetTag}${ex.name_it}</div>
+        <div class="ex-list-target">${ex.sets} × ${repsStr} · ${formatRest(ex.rest_seconds)}</div>
+        ${lastStr}
+      </div>
+      <div class="ex-list-arrow">›</div>
+    `;
+    item.addEventListener('click', () => openExercise(ex));
+    list.appendChild(item);
   });
+
+  updateProgressBar();
 }
 
-function renderCurrentExercise() {
-  const ex = state.currentSession.exercises[state.currentExIndex];
+function updateProgressBar() {
   const total = state.currentSession.exercises.length;
-  const rir = getRIR(ex);
+  const done = state.currentSession.exercises.filter(ex =>
+    (state.allCurrentSets[ex.id] || []).length > 0
+  ).length;
+  const pct = total > 0 ? (done / total) * 100 : 0;
+  document.getElementById('session-progress-fill').style.width = pct + '%';
+}
 
-  document.getElementById('ex-number').textContent = `${state.currentExIndex + 1} / ${total}`;
+// ===== EXERCISE DETAIL =====
+function openExercise(ex) {
+  state.activeExercise = ex;
+  clearInterval(state.restTimer);
+  document.getElementById('rest-timer').hidden = true;
 
-  const nameEl = document.getElementById('ex-name');
-  const supersetTag = ex.superset_label
-    ? `<span class="superset-badge">${ex.superset_label}</span>` : '';
-  nameEl.innerHTML = `${supersetTag}${ex.name_it}`;
+  // Header
+  const supersetTag = ex.superset_label ? `<span class="superset-badge">${ex.superset_label}</span>` : '';
+  document.getElementById('ex-detail-name').innerHTML = `${supersetTag}${ex.name_it}`;
 
+  // Target line
   const repsStr = ex.reps_min === ex.reps_max
     ? `${ex.reps_min} rip`
-    : ex.reps_min && ex.reps_max ? `${ex.reps_min}-${ex.reps_max} rip` : `${ex.duration_seconds}s`;
-  const restStr = formatRest(ex.rest_seconds);
+    : (ex.reps_min && ex.reps_max ? `${ex.reps_min}-${ex.reps_max} rip` : `${ex.duration_seconds}s`);
+  const rir = getRIR(ex);
   const rirStr = rir !== null ? ` · RIR ${rir}` : '';
+  const failStr = ex.last_set_failure ? ' · ultima a cedimento' : '';
   const optStr = ex.optional ? ' · opzionale' : '';
-  document.getElementById('ex-target').textContent =
-    `${ex.sets} serie × ${repsStr} · riposo ${restStr}${rirStr}${optStr}`;
+  document.getElementById('ex-detail-target').textContent =
+    `${ex.sets} serie × ${repsStr} · riposo ${formatRest(ex.rest_seconds)}${rirStr}${failStr}${optStr}`;
 
-  document.getElementById('ex-note').textContent = ex.note || '';
+  document.getElementById('ex-detail-note').textContent = ex.note || '';
 
-  renderLastSession(ex);
-  renderSetsLog(ex);
+  renderLastSessionDetail(ex);
+  renderDetailSetsLog(ex);
 
-  document.getElementById('btn-prev-ex').disabled = state.currentExIndex === 0;
-  const isLast = state.currentExIndex === total - 1;
-  document.getElementById('btn-next-ex').textContent = isLast ? 'Fine ✓' : 'Succ →';
+  showScreen('screen-exercise');
 }
 
-function renderLastSession(ex) {
-  const container = document.getElementById('last-session');
+function renderLastSessionDetail(ex) {
+  const container = document.getElementById('ex-detail-last');
   const lastLog = getLastExerciseLog(ex.id);
   if (!lastLog) {
-    container.innerHTML = `<div class="last-session-title">Ultima sessione</div><div class="last-session-empty">Nessun dato</div>`;
+    container.innerHTML = `<div class="last-session-title">Ultima sessione</div><div class="last-session-empty">Nessun dato precedente</div>`;
     return;
   }
-  const chips = lastLog.sets.map(s => `<span class="last-set-chip">${s.kg}kg × ${s.reps}</span>`).join('');
+  const chips = lastLog.sets.map(s =>
+    `<span class="last-set-chip">${s.kg}&nbsp;kg × ${s.reps}</span>`
+  ).join('');
   container.innerHTML = `
     <div class="last-session-title">Ultima · ${formatDateShort(lastLog.date)}</div>
     <div class="last-session-row">${chips}</div>
   `;
 }
 
-function renderSetsLog(ex) {
-  const container = document.getElementById('sets-log');
+function renderDetailSetsLog(ex) {
+  const container = document.getElementById('ex-detail-sets-log');
   container.innerHTML = '';
   const sets = state.allCurrentSets[ex.id] || [];
   sets.forEach((set, i) => {
@@ -196,12 +235,28 @@ function renderSetsLog(ex) {
 function openSetModal(exerciseId, editIndex = null) {
   const sets = state.allCurrentSets[exerciseId] || [];
   const lastLog = getLastExerciseLog(exerciseId);
-  const lastSet = editIndex !== null ? sets[editIndex]
-    : (sets.length > 0 ? sets[sets.length - 1] : lastLog?.sets?.[0]);
 
-  document.getElementById('modal-kg').value = lastSet?.kg ?? 0;
-  document.getElementById('modal-reps').value = lastSet?.reps ?? 8;
+  let prefillKg, prefillReps;
+  if (editIndex !== null) {
+    // Editing existing set
+    prefillKg = sets[editIndex].kg;
+    prefillReps = sets[editIndex].reps;
+  } else if (sets.length > 0) {
+    // Use last set logged today
+    prefillKg = sets[sets.length - 1].kg;
+    prefillReps = sets[sets.length - 1].reps;
+  } else if (lastLog?.sets?.length) {
+    // Use same-index set from last session, or first set
+    const sameSet = lastLog.sets[sets.length] ?? lastLog.sets[0];
+    prefillKg = sameSet.kg;
+    prefillReps = sameSet.reps;
+  } else {
+    prefillKg = 0;
+    prefillReps = 8;
+  }
 
+  document.getElementById('modal-kg').value = prefillKg;
+  document.getElementById('modal-reps').value = prefillReps;
   state.modalContext = { exerciseId, editIndex };
 
   hideAllModals();
@@ -221,20 +276,27 @@ function confirmSet() {
     sets[editIndex] = { kg, reps };
   } else {
     sets.push({ kg, reps });
-    // Start rest timer
-    const ex = state.currentSession.exercises.find(e => e.id === exerciseId);
-    if (ex && ex.rest_seconds > 0) startRestTimer(ex.rest_seconds);
+    const ex = state.currentSession
+      ? state.currentSession.exercises.find(e => e.id === exerciseId)
+      : null;
+    if (ex && ex.rest_seconds > 0) startRestTimer(ex.rest_seconds, exerciseId);
   }
 
   closeModal();
-  renderCurrentExercise();
-  renderExerciseNav();
+
+  // Refresh whichever view is active
+  if (state.activeExercise?.id === exerciseId) {
+    renderDetailSetsLog(state.activeExercise);
+  }
+  // Refresh list in background so progress bar updates
+  if (state.currentSession) renderExerciseList();
 }
 
 // ===== REST TIMER =====
-function startRestTimer(seconds) {
+function startRestTimer(seconds, exerciseId) {
   clearInterval(state.restTimer);
   state.restRemaining = seconds;
+  state.restExerciseId = exerciseId;
   const timerEl = document.getElementById('rest-timer');
   timerEl.hidden = false;
   updateRestDisplay();
@@ -256,17 +318,13 @@ function updateRestDisplay() {
   document.getElementById('rest-countdown').textContent = `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-function skipRest() {
-  clearInterval(state.restTimer);
-  document.getElementById('rest-timer').hidden = true;
-}
-
 // ===== FINISH WORKOUT =====
 function finishWorkout() {
-  const totalSets = Object.values(state.allCurrentSets).reduce((n, sets) => n + sets.length, 0);
+  const totalSets = Object.entries(state.allCurrentSets)
+    .filter(([k]) => k !== '_sessionId')
+    .reduce((n, [, sets]) => n + sets.length, 0);
   document.getElementById('modal-finish-text').textContent =
     `Hai loggato ${totalSets} serie totali. Salvare su GitHub?`;
-
   hideAllModals();
   document.getElementById('modal-confirm-finish').classList.remove('hidden');
   document.getElementById('modal-overlay').classList.remove('hidden');
@@ -281,14 +339,13 @@ async function confirmFinishWorkout() {
     sessionName: state.currentSession.name,
     week: state.currentWeek,
     exercises: Object.entries(state.allCurrentSets)
-      .filter(([, sets]) => sets.length > 0)
+      .filter(([k, sets]) => k !== '_sessionId' && sets.length > 0)
       .map(([exerciseId, sets]) => ({ exerciseId, sets })),
   };
-
   state.logs.unshift(entry);
   storage.saveLogs(state.logs);
+  state.allCurrentSets = {};
   renderHome();
-
   showScreen('screen-home');
   showToast('Allenamento salvato!', 'success');
 
@@ -311,22 +368,17 @@ async function saveLogToGitHub(entry) {
 
 async function syncLogsFromGitHub() {
   try {
-    const index = await gh.getFile('logs/.gitkeep');
-    // List logs folder
     const res = await fetch(`https://api.github.com/repos/${gh.repo}/contents/logs`, {
       headers: { Authorization: `token ${gh.token}`, Accept: 'application/vnd.github+json' },
     });
     if (!res.ok) return;
     const files = await res.json();
     const jsonFiles = files.filter(f => f.name.endsWith('.json'));
-
     const remoteLogs = [];
     for (const file of jsonFiles) {
       const data = await gh.getFile(`logs/${file.name}`);
       if (data) remoteLogs.push(data.content);
     }
-
-    // Merge with local, deduplicate by date+sessionId
     const merged = [...state.logs];
     for (const remote of remoteLogs) {
       const exists = merged.find(l => l.date === remote.date && l.sessionId === remote.sessionId);
@@ -336,9 +388,7 @@ async function syncLogsFromGitHub() {
     state.logs = merged;
     storage.saveLogs(merged);
     renderHome();
-  } catch {
-    // silent — sync is best-effort
-  }
+  } catch { /* silent */ }
 }
 
 // ===== FREE WORKOUT =====
@@ -352,9 +402,8 @@ function openExercisePicker() {
   const list = document.getElementById('picker-list');
   list.innerHTML = '';
   const allExercises = state.config.sessions.flatMap(s =>
-    s.exercises.map(ex => ({ ...ex, sessionName: s.name, sessionColor: s.color }))
+    s.exercises.map(ex => ({ ...ex, sessionName: s.name }))
   );
-
   renderPickerItems(allExercises);
   document.getElementById('picker-search').value = '';
   document.getElementById('picker-search').oninput = e => {
@@ -363,7 +412,6 @@ function openExercisePicker() {
       ex.name_it.toLowerCase().includes(q) || ex.name_en.toLowerCase().includes(q)
     ));
   };
-
   hideAllModals();
   document.getElementById('modal-picker').classList.remove('hidden');
   document.getElementById('modal-overlay').classList.remove('hidden');
@@ -373,20 +421,23 @@ function renderPickerItems(exercises) {
   const list = document.getElementById('picker-list');
   list.innerHTML = '';
   exercises.forEach(ex => {
+    const lastLog = getLastExerciseLog(ex.id);
+    const lastStr = lastLog
+      ? lastLog.sets.map(s => `${s.kg}kg×${s.reps}`).join(' · ')
+      : 'Nessun dato';
     const item = document.createElement('div');
     item.className = 'picker-item';
-    item.innerHTML = `<div class="picker-item-name">${ex.name_it}</div><div class="picker-item-day">${ex.sessionName}</div>`;
-    item.addEventListener('click', () => {
-      addFreeExercise(ex);
-      closeModal();
-    });
+    item.innerHTML = `
+      <div class="picker-item-name">${ex.name_it}</div>
+      <div class="picker-item-day">${ex.sessionName} · ${lastStr}</div>
+    `;
+    item.addEventListener('click', () => { addFreeExercise(ex); closeModal(); });
     list.appendChild(item);
   });
 }
 
 function addFreeExercise(ex) {
-  const entry = { exerciseId: ex.id, name: ex.name_it, sets: [] };
-  state.freeWorkout.push(entry);
+  state.freeWorkout.push({ exerciseId: ex.id, name: ex.name_it, sets: [] });
   renderFreeWorkout();
 }
 
@@ -396,18 +447,18 @@ function renderFreeWorkout() {
   state.freeWorkout.forEach((entry, idx) => {
     const block = document.createElement('div');
     block.className = 'free-exercise-block';
-    const chips = entry.sets.map((s, i) =>
-      `<span class="last-set-chip">${s.kg}kg × ${s.reps}</span>`
-    ).join('');
+    const chips = entry.sets.map(s => `<span class="last-set-chip">${s.kg}kg × ${s.reps}</span>`).join('');
     block.innerHTML = `
       <div class="free-exercise-title">${entry.name}</div>
       <div class="last-session-row" style="margin-bottom:8px">${chips || '<span style="color:var(--text2);font-size:.8rem">Nessuna serie</span>'}</div>
       <button class="add-set-btn" data-idx="${idx}">+ Serie</button>
     `;
     block.querySelector('.add-set-btn').addEventListener('click', () => {
+      const lastKg = entry.sets.at(-1)?.kg ?? getLastExerciseLog(entry.exerciseId)?.sets?.[0]?.kg ?? 0;
+      const lastReps = entry.sets.at(-1)?.reps ?? 8;
+      document.getElementById('modal-kg').value = lastKg;
+      document.getElementById('modal-reps').value = lastReps;
       state.modalContext = { freeIdx: idx };
-      document.getElementById('modal-kg').value = entry.sets.at(-1)?.kg ?? 0;
-      document.getElementById('modal-reps').value = entry.sets.at(-1)?.reps ?? 8;
       hideAllModals();
       document.getElementById('modal-set').classList.remove('hidden');
       document.getElementById('modal-overlay').classList.remove('hidden');
@@ -423,30 +474,27 @@ async function finishFreeWorkout() {
     sessionId: 'free',
     sessionName: 'Allenamento libero',
     week: state.currentWeek,
-    exercises: state.freeWorkout
-      .filter(e => e.sets.length > 0)
+    exercises: state.freeWorkout.filter(e => e.sets.length > 0)
       .map(e => ({ exerciseId: e.exerciseId, sets: e.sets })),
   };
-
   state.logs.unshift(entry);
   storage.saveLogs(state.logs);
   renderHome();
   showScreen('screen-home');
   showToast('Allenamento libero salvato!', 'success');
-
   if (gh.token && gh.repo) {
     try { await saveLogToGitHub(entry); } catch { /* silent */ }
   }
 }
 
-// ===== HISTORY / PROGRESSION =====
-function showExerciseHistory(exerciseId) {
+// ===== HISTORY =====
+function showExerciseHistory(exerciseId, backScreen) {
+  state.historyBackScreen = backScreen || 'screen-workout';
   const allExercises = state.config.sessions.flatMap(s => s.exercises);
   const ex = allExercises.find(e => e.id === exerciseId);
   if (!ex) return;
 
   const logs = getExerciseLogs(exerciseId);
-
   document.getElementById('history-title').textContent = ex.name_it;
   const content = document.getElementById('history-content');
   content.innerHTML = '';
@@ -454,13 +502,10 @@ function showExerciseHistory(exerciseId) {
   if (logs.length === 0) {
     content.innerHTML = '<p style="color:var(--text2);padding:16px">Nessun dato registrato.</p>';
   } else {
-    // Chart
     const chartDiv = document.createElement('div');
     chartDiv.className = 'chart-container';
     chartDiv.innerHTML = `<div class="chart-title">Peso massimo per sessione (kg)</div><canvas class="chart-canvas" id="prog-chart"></canvas>`;
     content.appendChild(chartDiv);
-
-    // Log entries
     logs.forEach(log => {
       const div = document.createElement('div');
       div.className = 'log-entry';
@@ -468,10 +513,8 @@ function showExerciseHistory(exerciseId) {
       div.innerHTML = `<div class="log-entry-date">${log.date} · ${log.sessionName}</div><div class="log-entry-sets">${chips}</div>`;
       content.appendChild(div);
     });
-
     requestAnimationFrame(() => drawChart(logs));
   }
-
   showScreen('screen-history');
 }
 
@@ -490,41 +533,33 @@ function drawChart(logs) {
     date: log.date.slice(5),
     max: Math.max(...log.sets.map(s => s.kg)),
   }));
-
-  if (points.length < 1) return;
+  if (!points.length) return;
 
   const minY = Math.min(...points.map(p => p.max)) * 0.9;
   const maxY = Math.max(...points.map(p => p.max)) * 1.1 || 10;
   const pad = { top: 10, bottom: 28, left: 10, right: 10 };
   const plotW = W - pad.left - pad.right;
   const plotH = H - pad.top - pad.bottom;
-
   const toX = i => pad.left + (i / Math.max(points.length - 1, 1)) * plotW;
   const toY = v => pad.top + plotH - ((v - minY) / (maxY - minY)) * plotH;
 
   ctx.clearRect(0, 0, W, H);
-
-  // Line
   ctx.beginPath();
   ctx.strokeStyle = '#d4a853';
   ctx.lineWidth = 2;
-  points.forEach((p, i) => {
-    i === 0 ? ctx.moveTo(toX(i), toY(p.max)) : ctx.lineTo(toX(i), toY(p.max));
-  });
+  points.forEach((p, i) => i === 0 ? ctx.moveTo(toX(i), toY(p.max)) : ctx.lineTo(toX(i), toY(p.max)));
   ctx.stroke();
 
-  // Dots + labels
-  ctx.fillStyle = '#d4a853';
-  ctx.font = `${11 * dpr / dpr}px -apple-system, sans-serif`;
+  ctx.font = '11px -apple-system, sans-serif';
   ctx.textAlign = 'center';
   points.forEach((p, i) => {
     const x = toX(i), y = toY(p.max);
+    ctx.fillStyle = '#d4a853';
     ctx.beginPath();
     ctx.arc(x, y, 4, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#a0a0a0';
     ctx.fillText(p.date, x, H - 4);
-    ctx.fillStyle = '#d4a853';
   });
 }
 
@@ -536,24 +571,23 @@ function getLastSession(sessionId) {
 function getLastExerciseLog(exerciseId) {
   for (const log of state.logs) {
     const ex = log.exercises?.find(e => e.exerciseId === exerciseId);
-    if (ex && ex.sets?.length > 0) return { date: log.date, sessionName: log.sessionName, sets: ex.sets };
+    if (ex?.sets?.length) return { date: log.date, sessionName: log.sessionName, sets: ex.sets };
   }
   return null;
 }
 
 function getExerciseLogs(exerciseId) {
   return state.logs
-    .filter(log => log.exercises?.some(e => e.exerciseId === exerciseId))
-    .map(log => {
-      const ex = log.exercises.find(e => e.exerciseId === exerciseId);
-      return { date: log.date, sessionName: log.sessionName, sets: ex.sets };
+    .filter(l => l.exercises?.some(e => e.exerciseId === exerciseId))
+    .map(l => {
+      const ex = l.exercises.find(e => e.exerciseId === exerciseId);
+      return { date: l.date, sessionName: l.sessionName, sets: ex.sets };
     });
 }
 
 function getRIR(ex) {
   if (ex.rir_week3 === null || ex.rir_week3 === undefined) return null;
-  const delta = state.currentWeek - 3;
-  return Math.max(0, ex.rir_week3 - delta);
+  return Math.max(0, ex.rir_week3 - (state.currentWeek - 3));
 }
 
 function formatRest(seconds) {
@@ -567,29 +601,25 @@ function formatDateShort(dateStr) {
   return d.toLocaleDateString('it-IT', { day: '2-digit', month: 'short' });
 }
 
-// ===== UI HELPERS =====
+// ===== UI =====
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-
 function hideAllModals() {
   document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
 }
-
 function closeModal() {
   hideAllModals();
   document.getElementById('modal-overlay').classList.add('hidden');
   state.modalContext = null;
 }
-
 function showToast(msg, type = '') {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast' + (type ? ' ' + type : '');
   setTimeout(() => t.classList.add('hidden'), 2500);
 }
-
 function updateWeekUI() {
   document.querySelectorAll('.week-btn').forEach(btn => {
     btn.classList.toggle('active', parseInt(btn.dataset.week) === state.currentWeek);
@@ -598,9 +628,9 @@ function updateWeekUI() {
   document.getElementById('rir-label').textContent = `RIR ${rir}`;
 }
 
-// ===== EVENT LISTENERS =====
+// ===== EVENTS =====
 function setupEventListeners() {
-  // Week selector
+  // Week
   document.querySelectorAll('.week-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       state.currentWeek = parseInt(btn.dataset.week);
@@ -609,7 +639,7 @@ function setupEventListeners() {
     });
   });
 
-  // Home buttons
+  // Home
   document.getElementById('btn-settings').addEventListener('click', () => {
     document.getElementById('input-token').value = gh.token;
     document.getElementById('input-repo').value = gh.repo;
@@ -618,39 +648,35 @@ function setupEventListeners() {
   });
   document.getElementById('btn-free-workout').addEventListener('click', startFreeWorkout);
 
-  // Workout buttons
+  // Exercise list screen
   document.getElementById('btn-back-home').addEventListener('click', () => {
     clearInterval(state.restTimer);
     showScreen('screen-home');
   });
   document.getElementById('btn-finish-workout').addEventListener('click', finishWorkout);
+
+  // Exercise detail screen
+  document.getElementById('btn-back-to-list').addEventListener('click', () => {
+    clearInterval(state.restTimer);
+    document.getElementById('rest-timer').hidden = true;
+    state.activeExercise = null;
+    renderExerciseList();
+    showScreen('screen-workout');
+  });
   document.getElementById('btn-add-set').addEventListener('click', () => {
-    const ex = state.currentSession.exercises[state.currentExIndex];
-    openSetModal(ex.id);
+    if (state.activeExercise) openSetModal(state.activeExercise.id);
   });
-  document.getElementById('btn-prev-ex').addEventListener('click', () => {
-    if (state.currentExIndex > 0) {
-      state.currentExIndex--;
-      renderCurrentExercise();
-      renderExerciseNav();
-    }
+  document.getElementById('btn-skip-rest').addEventListener('click', () => {
+    clearInterval(state.restTimer);
+    document.getElementById('rest-timer').hidden = true;
   });
-  document.getElementById('btn-next-ex').addEventListener('click', () => {
-    const total = state.currentSession.exercises.length;
-    if (state.currentExIndex < total - 1) {
-      state.currentExIndex++;
-      renderCurrentExercise();
-      renderExerciseNav();
-    } else {
-      finishWorkout();
-    }
-  });
-  document.getElementById('btn-skip-rest').addEventListener('click', skipRest);
 
   // History
-  document.getElementById('btn-back-from-history').addEventListener('click', () => showScreen('screen-workout'));
+  document.getElementById('btn-back-from-history').addEventListener('click', () => {
+    showScreen(state.historyBackScreen);
+  });
 
-  // Free workout
+  // Free
   document.getElementById('btn-back-from-free').addEventListener('click', () => showScreen('screen-home'));
   document.getElementById('btn-finish-free').addEventListener('click', finishFreeWorkout);
   document.getElementById('btn-add-free-exercise').addEventListener('click', openExercisePicker);
@@ -666,7 +692,7 @@ function setupEventListeners() {
     if (gh.token && gh.repo) syncLogsFromGitHub();
   });
 
-  // Modal buttons
+  // Modal — set confirm
   document.getElementById('btn-modal-cancel').addEventListener('click', closeModal);
   document.getElementById('btn-modal-confirm').addEventListener('click', () => {
     const ctx = state.modalContext;
@@ -684,17 +710,16 @@ function setupEventListeners() {
   document.getElementById('btn-finish-cancel').addEventListener('click', closeModal);
   document.getElementById('btn-finish-confirm').addEventListener('click', confirmFinishWorkout);
 
-  // +/- buttons in modal
+  // +/- buttons
   document.querySelectorAll('.num-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const input = document.getElementById(btn.dataset.target);
       const delta = parseFloat(btn.dataset.delta);
-      const val = parseFloat(input.value) || 0;
-      input.value = Math.max(0, Math.round((val + delta) * 10) / 10);
+      input.value = Math.max(0, Math.round((parseFloat(input.value || 0) + delta) * 10) / 10);
     });
   });
 
-  // Close modal on overlay click
+  // Close modal on overlay background tap
   document.getElementById('modal-overlay').addEventListener('click', e => {
     if (e.target === document.getElementById('modal-overlay')) closeModal();
   });
@@ -705,7 +730,6 @@ function renderStats() {
   const totalWorkouts = state.logs.length;
   const totalSets = state.logs.reduce((n, l) => n + (l.exercises?.reduce((m, e) => m + e.sets.length, 0) || 0), 0);
   const allExIds = new Set(state.logs.flatMap(l => l.exercises?.map(e => e.exerciseId) || []));
-
   grid.innerHTML = `
     <div class="stat-card"><div class="stat-value">${totalWorkouts}</div><div class="stat-label">Allenamenti</div></div>
     <div class="stat-card"><div class="stat-value">${totalSets}</div><div class="stat-label">Serie totali</div></div>
