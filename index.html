@@ -36,10 +36,16 @@
     <!-- populated by JS -->
   </div>
 
-  <button class="free-btn" id="btn-free-workout">
-    <span class="free-icon">+</span>
-    Allenamento libero
-  </button>
+  <div class="home-actions">
+    <button class="free-btn" id="btn-free-workout">
+      <span class="free-icon">+</span>
+      Allenamento libero
+    </button>
+    <button class="storico-btn" id="btn-storico">
+      <span>&#128200;</span>
+      Storico
+    </button>
+  </div>
 </div>
 
 <!-- ===== EXERCISE LIST (after choosing session) ===== -->
@@ -64,6 +70,7 @@
   <header class="app-header">
     <button class="icon-btn back-btn" id="btn-back-to-list" aria-label="Indietro">&#8592;</button>
     <h2 id="ex-detail-name" class="ex-detail-name-header"></h2>
+    <button class="icon-btn" id="btn-ex-chart" title="Storico" aria-label="Grafico progressione">&#128200;</button>
   </header>
 
   <div class="exercise-card">
@@ -88,7 +95,19 @@
   </div>
 </div>
 
-<!-- ===== HISTORY SCREEN ===== -->
+<!-- ===== STORICO ESERCIZI ===== -->
+<div id="screen-storico" class="screen">
+  <header class="app-header">
+    <button class="icon-btn back-btn" id="btn-back-from-storico">&#8592;</button>
+    <h2>Storico esercizi</h2>
+  </header>
+  <div class="storico-search-bar">
+    <input type="text" id="storico-search" class="settings-input" placeholder="Cerca esercizio...">
+  </div>
+  <div class="storico-list" id="storico-list"></div>
+</div>
+
+<!-- ===== HISTORY / PROGRESSIONE GRAFICO ===== -->
 <div id="screen-history" class="screen">
   <header class="app-header">
     <button class="icon-btn back-btn" id="btn-back-from-history" aria-label="Indietro">&#8592;</button>

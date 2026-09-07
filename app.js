@@ -487,9 +487,93 @@ async function finishFreeWorkout() {
   }
 }
 
-// ===== HISTORY =====
+// ===== STORICO ESERCIZI =====
+function renderStoricoScreen() {
+  const container = document.getElementById('storico-list');
+  container.innerHTML = '';
+
+  const allExercises = state.config.sessions.flatMap(s =>
+    s.exercises.map(ex => ({ ...ex, sessionName: s.name, sessionColor: s.color }))
+  );
+
+  let currentQuery = '';
+
+  function renderItems(query) {
+    container.innerHTML = '';
+    const filtered = query
+      ? allExercises.filter(ex =>
+          ex.name_it.toLowerCase().includes(query) ||
+          ex.name_en.toLowerCase().includes(query))
+      : null;
+
+    const grouped = filtered
+      ? [{ name: 'Risultati', color: '#d4a853', exercises: filtered }]
+      : state.config.sessions.map(s => ({
+          name: s.name,
+          color: s.color,
+          exercises: s.exercises,
+        }));
+
+    grouped.forEach(group => {
+      const groupEl = document.createElement('div');
+      groupEl.className = 'storico-group';
+
+      const title = document.createElement('div');
+      title.className = 'storico-group-title';
+      title.style.color = group.color;
+      title.textContent = group.name;
+      groupEl.appendChild(title);
+
+      group.exercises.forEach(ex => {
+        const lastLog = getLastExerciseLog(ex.id);
+        const allLogs = getExerciseLogs(ex.id);
+        const maxEver = allLogs.length
+          ? Math.max(...allLogs.flatMap(l => l.sets.map(s => s.kg)))
+          : null;
+
+        const item = document.createElement('div');
+        item.className = 'storico-item';
+
+        let lastStr = '';
+        if (lastLog) {
+          lastStr = `<div class="storico-item-last">${lastLog.sets.map(s => `${s.kg}kg×${s.reps}`).join(' · ')} · ${formatDateShort(lastLog.date)}</div>`;
+        } else {
+          lastStr = `<div class="storico-no-data">Nessun dato registrato</div>`;
+        }
+
+        const maxStr = maxEver !== null
+          ? `<span style="color:var(--accent)">Max ${maxEver}kg</span> · ` : '';
+
+        item.innerHTML = `
+          <div class="storico-item-body">
+            <div class="storico-item-name">${ex.name_it}</div>
+            <div class="storico-item-meta">${maxStr}${allLogs.length} sessioni</div>
+            ${lastStr}
+          </div>
+          <div class="storico-item-arrow">›</div>
+        `;
+        item.addEventListener('click', () => {
+          showExerciseHistory(ex.id, 'screen-storico');
+        });
+        groupEl.appendChild(item);
+      });
+
+      container.appendChild(groupEl);
+    });
+  }
+
+  renderItems('');
+
+  const searchInput = document.getElementById('storico-search');
+  searchInput.value = '';
+  searchInput.oninput = e => renderItems(e.target.value.toLowerCase().trim());
+
+  showScreen('screen-storico');
+}
+
+// ===== HISTORY / PROGRESSIONE =====
 function showExerciseHistory(exerciseId, backScreen) {
-  state.historyBackScreen = backScreen || 'screen-workout';
+  state.historyBackScreen = backScreen || 'screen-storico';
   const allExercises = state.config.sessions.flatMap(s => s.exercises);
   const ex = allExercises.find(e => e.id === exerciseId);
   if (!ex) return;
@@ -500,25 +584,63 @@ function showExerciseHistory(exerciseId, backScreen) {
   content.innerHTML = '';
 
   if (logs.length === 0) {
-    content.innerHTML = '<p style="color:var(--text2);padding:16px">Nessun dato registrato.</p>';
-  } else {
-    const chartDiv = document.createElement('div');
-    chartDiv.className = 'chart-container';
-    chartDiv.innerHTML = `<div class="chart-title">Peso massimo per sessione (kg)</div><canvas class="chart-canvas" id="prog-chart"></canvas>`;
-    content.appendChild(chartDiv);
-    logs.forEach(log => {
-      const div = document.createElement('div');
-      div.className = 'log-entry';
-      const chips = log.sets.map(s => `<span class="last-set-chip">${s.kg}kg × ${s.reps}</span>`).join('');
-      div.innerHTML = `<div class="log-entry-date">${log.date} · ${log.sessionName}</div><div class="log-entry-sets">${chips}</div>`;
-      content.appendChild(div);
-    });
-    requestAnimationFrame(() => drawChart(logs));
+    content.innerHTML = '<p style="color:var(--text2);padding:16px">Nessun dato registrato per questo esercizio.</p>';
+    showScreen('screen-history');
+    return;
   }
+
+  // Chart container with tabs (peso max / volume)
+  const maxEver = Math.max(...logs.flatMap(l => l.sets.map(s => s.kg)));
+  const chartDiv = document.createElement('div');
+  chartDiv.className = 'chart-container';
+  chartDiv.innerHTML = `
+    <div class="chart-header">
+      <div class="chart-title">Progressione</div>
+      <div class="chart-max-label">Max: ${maxEver} kg</div>
+    </div>
+    <div class="chart-tabs">
+      <button class="chart-tab active" data-mode="max">Peso max</button>
+      <button class="chart-tab" data-mode="avg">Peso medio</button>
+      <button class="chart-tab" data-mode="volume">Volume</button>
+    </div>
+    <canvas class="chart-canvas" id="prog-chart"></canvas>
+  `;
+  content.appendChild(chartDiv);
+
+  // Log entries
+  logs.forEach(log => {
+    const volume = log.sets.reduce((v, s) => v + s.kg * s.reps, 0);
+    const div = document.createElement('div');
+    div.className = 'log-entry';
+    const chips = log.sets.map(s => `<span class="last-set-chip">${s.kg}kg×${s.reps}</span>`).join('');
+    div.innerHTML = `
+      <div class="log-entry-date">${formatDateFull(log.date)}</div>
+      <div class="log-entry-sets">${chips}</div>
+      <div class="log-entry-volume">Volume: ${volume.toLocaleString('it-IT')} kg totali</div>
+    `;
+    content.appendChild(div);
+  });
+
+  let chartMode = 'max';
+
+  function redraw() {
+    requestAnimationFrame(() => drawChart(logs, chartMode));
+  }
+
+  chartDiv.querySelectorAll('.chart-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      chartDiv.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      chartMode = tab.dataset.mode;
+      redraw();
+    });
+  });
+
   showScreen('screen-history');
+  requestAnimationFrame(redraw);
 }
 
-function drawChart(logs) {
+function drawChart(logs, mode = 'max') {
   const canvas = document.getElementById('prog-chart');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -529,37 +651,96 @@ function drawChart(logs) {
   ctx.scale(dpr, dpr);
   const W = rect.width, H = rect.height;
 
-  const points = logs.slice().reverse().map(log => ({
-    date: log.date.slice(5),
-    max: Math.max(...log.sets.map(s => s.kg)),
-  }));
+  const points = logs.slice().reverse().map(log => {
+    const kgs = log.sets.map(s => s.kg);
+    const val = mode === 'max'
+      ? Math.max(...kgs)
+      : mode === 'avg'
+        ? Math.round((kgs.reduce((a, b) => a + b, 0) / kgs.length) * 10) / 10
+        : log.sets.reduce((v, s) => v + s.kg * s.reps, 0);
+    return { date: log.date.slice(5), val };
+  });
   if (!points.length) return;
 
-  const minY = Math.min(...points.map(p => p.max)) * 0.9;
-  const maxY = Math.max(...points.map(p => p.max)) * 1.1 || 10;
-  const pad = { top: 10, bottom: 28, left: 10, right: 10 };
+  const unit = mode === 'volume' ? '' : 'kg';
+  const vals = points.map(p => p.val);
+  const rawMin = Math.min(...vals);
+  const rawMax = Math.max(...vals);
+  const spread = rawMax - rawMin || 1;
+  const pad = { top: 28, bottom: 30, left: 38, right: 12 };
   const plotW = W - pad.left - pad.right;
   const plotH = H - pad.top - pad.bottom;
+  const yMin = rawMin - spread * 0.15;
+  const yMax = rawMax + spread * 0.25;
+
   const toX = i => pad.left + (i / Math.max(points.length - 1, 1)) * plotW;
-  const toY = v => pad.top + plotH - ((v - minY) / (maxY - minY)) * plotH;
+  const toY = v => pad.top + plotH - ((v - yMin) / (yMax - yMin)) * plotH;
 
   ctx.clearRect(0, 0, W, H);
+
+  // Grid lines
+  const gridCount = 4;
+  ctx.font = `${10}px -apple-system, sans-serif`;
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= gridCount; i++) {
+    const v = yMin + (yMax - yMin) * (i / gridCount);
+    const y = toY(v);
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(W - pad.right, y);
+    ctx.stroke();
+    ctx.fillStyle = '#606060';
+    const label = mode === 'volume' ? Math.round(v).toLocaleString('it-IT') : Math.round(v * 10) / 10;
+    ctx.fillText(label, pad.left - 4, y + 4);
+  }
+
+  // Area under line
+  ctx.beginPath();
+  points.forEach((p, i) => i === 0 ? ctx.moveTo(toX(i), toY(p.val)) : ctx.lineTo(toX(i), toY(p.val)));
+  ctx.lineTo(toX(points.length - 1), pad.top + plotH);
+  ctx.lineTo(toX(0), pad.top + plotH);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(212,168,83,0.10)';
+  ctx.fill();
+
+  // Line
   ctx.beginPath();
   ctx.strokeStyle = '#d4a853';
-  ctx.lineWidth = 2;
-  points.forEach((p, i) => i === 0 ? ctx.moveTo(toX(i), toY(p.max)) : ctx.lineTo(toX(i), toY(p.max)));
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round';
+  points.forEach((p, i) => i === 0 ? ctx.moveTo(toX(i), toY(p.val)) : ctx.lineTo(toX(i), toY(p.val)));
   ctx.stroke();
 
-  ctx.font = '11px -apple-system, sans-serif';
+  // Dots, value labels, date labels
+  ctx.font = `bold ${11}px -apple-system, sans-serif`;
   ctx.textAlign = 'center';
   points.forEach((p, i) => {
-    const x = toX(i), y = toY(p.max);
+    const x = toX(i), y = toY(p.val);
+
+    // Dot
     ctx.fillStyle = '#d4a853';
     ctx.beginPath();
-    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = '#a0a0a0';
-    ctx.fillText(p.date, x, H - 4);
+    ctx.fillStyle = '#0f0f0f';
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Value above dot
+    const valLabel = mode === 'volume'
+      ? Math.round(p.val).toLocaleString('it-IT')
+      : `${p.val}${unit}`;
+    ctx.fillStyle = '#d4a853';
+    ctx.font = `bold 10px -apple-system, sans-serif`;
+    ctx.fillText(valLabel, x, y - 10);
+
+    // Date below
+    ctx.fillStyle = '#606060';
+    ctx.font = `10px -apple-system, sans-serif`;
+    ctx.fillText(p.date, x, H - 6);
   });
 }
 
@@ -599,6 +780,11 @@ function formatRest(seconds) {
 function formatDateShort(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
   return d.toLocaleDateString('it-IT', { day: '2-digit', month: 'short' });
+}
+
+function formatDateFull(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('it-IT', { weekday: 'short', day: '2-digit', month: 'long', year: 'numeric' });
 }
 
 // ===== UI =====
@@ -647,6 +833,10 @@ function setupEventListeners() {
     showScreen('screen-settings');
   });
   document.getElementById('btn-free-workout').addEventListener('click', startFreeWorkout);
+  document.getElementById('btn-storico').addEventListener('click', renderStoricoScreen);
+
+  // Storico screen
+  document.getElementById('btn-back-from-storico').addEventListener('click', () => showScreen('screen-home'));
 
   // Exercise list screen
   document.getElementById('btn-back-home').addEventListener('click', () => {
@@ -665,6 +855,9 @@ function setupEventListeners() {
   });
   document.getElementById('btn-add-set').addEventListener('click', () => {
     if (state.activeExercise) openSetModal(state.activeExercise.id);
+  });
+  document.getElementById('btn-ex-chart').addEventListener('click', () => {
+    if (state.activeExercise) showExerciseHistory(state.activeExercise.id, 'screen-exercise');
   });
   document.getElementById('btn-skip-rest').addEventListener('click', () => {
     clearInterval(state.restTimer);
