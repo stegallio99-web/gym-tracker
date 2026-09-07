@@ -79,14 +79,12 @@
 
   <div class="rest-timer" id="rest-timer" hidden>
     <div class="rest-label">Riposo</div>
-    <div class="rest-countdown-row">
-      <div class="rest-countdown" id="rest-countdown">2:00</div>
-      <button class="rest-edit-btn" id="btn-rest-edit" aria-label="Modifica tempo">&#9998;</button>
-    </div>
-    <div class="rest-edit-row" id="rest-edit-row" hidden>
+    <div class="rest-countdown" id="rest-countdown">2:00</div>
+    <div class="rest-edit-row">
       <select id="rest-edit-min" class="rest-select"></select>
       <span class="rest-sep">:</span>
       <select id="rest-edit-sec" class="rest-select"></select>
+      <button class="rest-set-btn" id="btn-rest-set">Imposta</button>
     </div>
     <div class="rest-adjust">
       <button class="rest-adj-btn" data-delta="-30">-30s</button>

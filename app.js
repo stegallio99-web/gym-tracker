@@ -293,11 +293,23 @@ function confirmSet() {
 }
 
 // ===== REST TIMER =====
+function syncRestSelects(seconds) {
+  const minSel = document.getElementById('rest-edit-min');
+  const secSel = document.getElementById('rest-edit-sec');
+  if (minSel && secSel) {
+    minSel.value = Math.floor(seconds / 60);
+    secSel.value = seconds % 60;
+  }
+}
+
 function startRestTimer(seconds) {
+  const saved = localStorage.getItem('rest_default_seconds');
+  const actual = saved ? Number(saved) : seconds;
   clearInterval(state.restTimer);
-  state.restEnd = Date.now() + seconds * 1000;
+  state.restEnd = Date.now() + actual * 1000;
   const timerEl = document.getElementById('rest-timer');
   timerEl.hidden = false;
+  syncRestSelects(actual);
   updateRestDisplay();
 
   state.restTimer = setInterval(() => {
@@ -849,7 +861,6 @@ function setupEventListeners() {
   document.getElementById('btn-skip-rest').addEventListener('click', () => {
     clearInterval(state.restTimer);
     document.getElementById('rest-timer').hidden = true;
-    document.getElementById('rest-edit-row').hidden = true;
   });
 
   // Populate wheel selects
@@ -858,25 +869,15 @@ function setupEventListeners() {
   for (let m = 0; m <= 9; m++) minSel.add(new Option(m, m));
   for (let s = 0; s < 60; s++) secSel.add(new Option(s.toString().padStart(2, '0'), s));
 
-  document.getElementById('btn-rest-edit').addEventListener('click', () => {
-    const row = document.getElementById('rest-edit-row');
-    row.hidden = !row.hidden;
-    if (!row.hidden) {
-      const rem = Math.max(0, Math.ceil((state.restEnd - Date.now()) / 1000));
-      minSel.value = Math.floor(rem / 60);
-      secSel.value = rem % 60;
-    }
-  });
-
-  function applyRestEdit() {
+  document.getElementById('btn-rest-set').addEventListener('click', () => {
     const total = Number(minSel.value) * 60 + Number(secSel.value);
     if (total > 0) {
+      localStorage.setItem('rest_default_seconds', total);
       state.restEnd = Date.now() + total * 1000;
       updateRestDisplay();
+      showToast('Timer impostato', 'success');
     }
-  }
-  minSel.addEventListener('change', applyRestEdit);
-  secSel.addEventListener('change', applyRestEdit);
+  });
 
   document.querySelectorAll('.rest-adj-btn').forEach(btn => {
     btn.addEventListener('click', () => {

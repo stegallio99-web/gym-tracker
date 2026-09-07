@@ -446,26 +446,11 @@ button,
   box-sizing: border-box;
 }
 .rest-label { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; }
-.rest-countdown-row { display: flex; align-items: center; gap: 12px; }
 .rest-countdown { font-size: 2.5rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
-.rest-edit-btn {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  color: var(--text2);
-  border-radius: var(--radius-sm);
-  padding: 6px 10px;
-  font-size: 1rem;
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-user-select: none;
-  user-select: none;
-}
-.rest-edit-btn:active { color: var(--accent); }
 .rest-edit-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
 }
 .rest-select {
@@ -473,13 +458,29 @@ button,
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: var(--radius-sm);
-  font-size: 1.4rem !important;
+  font-size: 1.2rem !important;
   font-weight: 700;
-  padding: 8px 12px;
+  padding: 8px 4px;
   text-align: center;
   flex: 1;
+  min-width: 0;
 }
-.rest-sep { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+.rest-sep { font-size: 1.4rem; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+.rest-set-btn {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.rest-set-btn:active { opacity: 0.8; }
 .rest-adjust {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
