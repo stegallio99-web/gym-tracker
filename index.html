@@ -75,18 +75,18 @@
     <div class="sets-log" id="ex-detail-sets-log"></div>
 
     <button class="add-set-btn" id="btn-add-set">+ Aggiungi serie</button>
+  </div>
 
-    <div class="rest-timer" id="rest-timer" hidden>
-      <div class="rest-label">Riposo</div>
-      <div class="rest-countdown" id="rest-countdown">2:00</div>
-      <div class="rest-adjust">
-        <button class="rest-adj-btn" data-delta="-30">-30s</button>
-        <button class="rest-adj-btn" data-delta="-15">-15s</button>
-        <button class="rest-adj-btn" data-delta="15">+15s</button>
-        <button class="rest-adj-btn" data-delta="30">+30s</button>
-      </div>
-      <button class="rest-skip" id="btn-skip-rest">Salta</button>
+  <div class="rest-timer" id="rest-timer" hidden>
+    <div class="rest-label">Riposo</div>
+    <div class="rest-countdown" id="rest-countdown">2:00</div>
+    <div class="rest-adjust">
+      <button class="rest-adj-btn" data-delta="-30">-30s</button>
+      <button class="rest-adj-btn" data-delta="-15">-15s</button>
+      <button class="rest-adj-btn" data-delta="15">+15s</button>
+      <button class="rest-adj-btn" data-delta="30">+30s</button>
     </div>
+    <button class="rest-skip" id="btn-skip-rest">Salta</button>
   </div>
 </div>
 
@@ -168,10 +168,10 @@
       </div>
       <div class="input-group">
         <label>Ripetizioni</label>
-        <div class="number-input-row">
-          <button class="num-btn" data-target="modal-reps" data-delta="-1">-1</button>
-          <input type="number" id="modal-reps" class="number-input" value="8" min="1" step="1">
-          <button class="num-btn" data-target="modal-reps" data-delta="1">+1</button>
+        <div class="reps-grid">
+          <button class="num-btn" style="grid-area:1/1/2/2" data-target="modal-reps" data-delta="-1">-1</button>
+          <input type="number" id="modal-reps" class="number-input" style="grid-area:1/2/2/3" value="8" min="1" step="1">
+          <button class="num-btn" style="grid-area:1/3/2/4" data-target="modal-reps" data-delta="1">+1</button>
         </div>
       </div>
     </div>
