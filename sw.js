@@ -1,5 +1,6 @@
-const CACHE = 'gym-tracker-v9';
-const ASSETS = ['/', '/index.html', '/app.js', '/styles.css', '/config.json', '/manifest.json'];
+const CACHE = 'gym-tracker-v10';
+const BASE = '/gym-tracker';
+const ASSETS = [BASE + '/', BASE + '/index.html', BASE + '/app.js', BASE + '/styles.css', BASE + '/config.json', BASE + '/manifest.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
