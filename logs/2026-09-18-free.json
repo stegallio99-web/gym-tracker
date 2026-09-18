@@ -1,0 +1,87 @@
+{
+  "date": "2026-09-18",
+  "sessionId": "free",
+  "sessionName": "Allenamento libero",
+  "week": 1,
+  "exercises": [
+    {
+      "exerciseId": "cat_061",
+      "sets": [
+        {
+          "kg": 100,
+          "reps": 5
+        },
+        {
+          "kg": 100,
+          "reps": 5
+        },
+        {
+          "kg": 100,
+          "reps": 5
+        },
+        {
+          "kg": 100,
+          "reps": 5
+        },
+        {
+          "kg": 100,
+          "reps": 5
+        }
+      ]
+    },
+    {
+      "exerciseId": "cat_073",
+      "sets": [
+        {
+          "kg": 60,
+          "reps": 5
+        },
+        {
+          "kg": 70,
+          "reps": 5
+        },
+        {
+          "kg": 100,
+          "reps": 5
+        },
+        {
+          "kg": 90,
+          "reps": 5
+        },
+        {
+          "kg": 90,
+          "reps": 5
+        },
+        {
+          "kg": 90,
+          "reps": 5
+        }
+      ]
+    },
+    {
+      "exerciseId": "cat_013",
+      "sets": [
+        {
+          "kg": 0,
+          "reps": 4
+        },
+        {
+          "kg": 0,
+          "reps": 3
+        },
+        {
+          "kg": 0,
+          "reps": 3
+        },
+        {
+          "kg": 0,
+          "reps": 3
+        },
+        {
+          "kg": 0,
+          "reps": 3
+        }
+      ]
+    }
+  ]
+}
