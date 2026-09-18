@@ -1,5 +1,131 @@
 'use strict';
 
+// ===== EXERCISE CATALOG (100 esercizi per gruppo muscolare) =====
+const EXERCISE_CATALOG = [
+  { group: 'Petto', exercises: [
+    { id: 'cat_001', name: 'Panca piana con bilanciere' },
+    { id: 'cat_002', name: 'Panca inclinata con bilanciere' },
+    { id: 'cat_003', name: 'Panca inclinata con manubri' },
+    { id: 'cat_004', name: 'Panca piana con manubri' },
+    { id: 'cat_005', name: 'Panca declinata' },
+    { id: 'cat_006', name: 'Croci ai cavi' },
+    { id: 'cat_007', name: 'Croci su panca con manubri' },
+    { id: 'cat_008', name: 'Pectoral machine (peck deck)' },
+    { id: 'cat_009', name: 'Chest press alla macchina' },
+    { id: 'cat_010', name: 'Dip alle parallele con busto inclinato' },
+    { id: 'cat_011', name: 'Piegamenti sulle braccia (push-up)' },
+    { id: 'cat_012', name: 'Pullover con manubrio' },
+  ]},
+  { group: 'Dorso', exercises: [
+    { id: 'cat_013', name: 'Trazioni alla sbarra presa prona' },
+    { id: 'cat_014', name: 'Trazioni presa supina (chin-up)' },
+    { id: 'cat_015', name: 'Trazioni presa neutra' },
+    { id: 'cat_016', name: 'Lat machine presa larga' },
+    { id: 'cat_017', name: 'Lat machine presa neutra o inversa' },
+    { id: 'cat_018', name: 'Pulldown a braccia tese (straight-arm)' },
+    { id: 'cat_019', name: 'Rematore con bilanciere' },
+    { id: 'cat_020', name: 'Rematore con manubrio a un braccio' },
+    { id: 'cat_021', name: 'Rematore con bilanciere presa supina' },
+    { id: 'cat_022', name: 'Pulley basso (seated cable row)' },
+    { id: 'cat_023', name: 'Rematore con appoggio al petto (chest-supported row)' },
+    { id: 'cat_024', name: 'T-bar row' },
+    { id: 'cat_025', name: 'Rematore inverso (inverted row)' },
+    { id: 'cat_026', name: 'Rack pull' },
+  ]},
+  { group: 'Spalle', exercises: [
+    { id: 'cat_027', name: 'Lento avanti con bilanciere (military press)' },
+    { id: 'cat_028', name: 'Overhead press con manubri' },
+    { id: 'cat_029', name: 'Arnold press' },
+    { id: 'cat_030', name: 'Push press' },
+    { id: 'cat_031', name: 'Alzate laterali con manubri' },
+    { id: 'cat_032', name: 'Alzate laterali ai cavi' },
+    { id: 'cat_033', name: 'Alzate laterali alla macchina' },
+    { id: 'cat_034', name: 'Alzate frontali' },
+    { id: 'cat_035', name: 'Alzate a 90° con manubri (rear delt fly)' },
+    { id: 'cat_036', name: 'Reverse pectoral machine' },
+    { id: 'cat_037', name: 'Face pull ai cavi' },
+    { id: 'cat_038', name: 'Scrollate (shrug)' },
+  ]},
+  { group: 'Bicipiti', exercises: [
+    { id: 'cat_039', name: 'Curl con bilanciere' },
+    { id: 'cat_040', name: 'Curl con bilanciere EZ' },
+    { id: 'cat_041', name: 'Curl alternato con manubri' },
+    { id: 'cat_042', name: 'Curl a martello' },
+    { id: 'cat_043', name: 'Curl su panca inclinata' },
+    { id: 'cat_044', name: 'Curl concentrato' },
+    { id: 'cat_045', name: 'Panca Scott (preacher curl)' },
+    { id: 'cat_046', name: 'Curl ai cavi' },
+    { id: 'cat_047', name: 'Spider curl' },
+  ]},
+  { group: 'Tricipiti', exercises: [
+    { id: 'cat_048', name: 'Push-down ai cavi con corda' },
+    { id: 'cat_049', name: 'Push-down ai cavi alla sbarra' },
+    { id: 'cat_050', name: 'French press / skull crusher' },
+    { id: 'cat_051', name: 'Estensioni overhead ai cavi' },
+    { id: 'cat_052', name: 'Estensioni overhead con manubrio' },
+    { id: 'cat_053', name: 'Dip alle parallele con busto verticale' },
+    { id: 'cat_054', name: 'Panca a presa stretta' },
+    { id: 'cat_055', name: 'Kickback con manubrio' },
+    { id: 'cat_056', name: 'Dip alla panca (bench dip)' },
+  ]},
+  { group: 'Avambracci e presa', exercises: [
+    { id: 'cat_057', name: 'Curl ai polsi' },
+    { id: 'cat_058', name: 'Curl ai polsi inverso' },
+    { id: 'cat_059', name: 'Curl inverso con bilanciere' },
+    { id: 'cat_060', name: 'Appensione alla sbarra / farmer walk' },
+  ]},
+  { group: 'Quadricipiti', exercises: [
+    { id: 'cat_061', name: 'Back squat con bilanciere' },
+    { id: 'cat_062', name: 'Front squat' },
+    { id: 'cat_063', name: 'Goblet squat' },
+    { id: 'cat_064', name: 'Hack squat' },
+    { id: 'cat_065', name: 'Leg press' },
+    { id: 'cat_066', name: 'Leg extension' },
+    { id: 'cat_067', name: 'Affondi con manubri' },
+    { id: 'cat_068', name: 'Affondi camminati' },
+    { id: 'cat_069', name: 'Affondi inversi' },
+    { id: 'cat_070', name: 'Bulgarian split squat' },
+    { id: 'cat_071', name: 'Step-up su rialzo' },
+    { id: 'cat_072', name: 'Squat al multipower (Smith machine)' },
+  ]},
+  { group: 'Ischiocrurali', exercises: [
+    { id: 'cat_073', name: 'Stacco da terra convenzionale' },
+    { id: 'cat_074', name: 'Stacco sumo' },
+    { id: 'cat_075', name: 'Stacco rumeno (RDL)' },
+    { id: 'cat_076', name: 'Stacco a gambe semitese' },
+    { id: 'cat_077', name: 'Stacco con trap bar' },
+    { id: 'cat_078', name: 'Leg curl seduto' },
+    { id: 'cat_079', name: 'Leg curl prono' },
+    { id: 'cat_080', name: 'Nordic curl' },
+  ]},
+  { group: 'Glutei e adduttori', exercises: [
+    { id: 'cat_081', name: 'Hip thrust con bilanciere' },
+    { id: 'cat_082', name: 'Ponte per glutei a terra' },
+    { id: 'cat_083', name: 'Cable pull-through' },
+    { id: 'cat_084', name: 'Back extension a 45°' },
+    { id: 'cat_085', name: 'Good morning' },
+    { id: 'cat_086', name: 'Kickback ai cavi' },
+    { id: 'cat_087', name: 'Abduzioni alla macchina' },
+    { id: 'cat_088', name: 'Adduzioni alla macchina' },
+  ]},
+  { group: 'Polpacci', exercises: [
+    { id: 'cat_089', name: 'Calf raise in piedi' },
+    { id: 'cat_090', name: 'Calf raise seduto' },
+    { id: 'cat_091', name: 'Calf raise alla leg press' },
+    { id: 'cat_092', name: 'Calf raise a una gamba con manubrio' },
+  ]},
+  { group: 'Core', exercises: [
+    { id: 'cat_093', name: 'Plank' },
+    { id: 'cat_094', name: 'Side plank' },
+    { id: 'cat_095', name: 'Crunch a terra' },
+    { id: 'cat_096', name: 'Crunch ai cavi in ginocchio' },
+    { id: 'cat_097', name: 'Hanging knee raise' },
+    { id: 'cat_098', name: 'Russian twist' },
+    { id: 'cat_099', name: 'Ab wheel rollout' },
+    { id: 'cat_100', name: 'Pallof press ai cavi' },
+  ]},
+];
+
 // ===== STATE =====
 const state = {
   config: null,
@@ -14,6 +140,7 @@ const state = {
   modalContext: null,
   freeWorkout: [],
   historyBackScreen: 'screen-workout',
+  pickerContext: 'free',  // 'free' | 'session'
 };
 
 // ===== GITHUB API =====
@@ -411,47 +538,92 @@ function startFreeWorkout() {
   showScreen('screen-free');
 }
 
-function openExercisePicker() {
-  const list = document.getElementById('picker-list');
-  list.innerHTML = '';
-  const allExercises = state.config.sessions.flatMap(s =>
-    s.exercises.map(ex => ({ ...ex, sessionName: s.name }))
-  );
-  renderPickerItems(allExercises);
+function openExercisePicker(context = 'free') {
+  state.pickerContext = context;
   document.getElementById('picker-search').value = '';
+  renderCatalogPicker('');
   document.getElementById('picker-search').oninput = e => {
-    const q = e.target.value.toLowerCase();
-    renderPickerItems(allExercises.filter(ex =>
-      ex.name_it.toLowerCase().includes(q) || ex.name_en.toLowerCase().includes(q)
-    ));
+    renderCatalogPicker(e.target.value.toLowerCase().trim());
   };
   hideAllModals();
   document.getElementById('modal-picker').classList.remove('hidden');
   document.getElementById('modal-overlay').classList.remove('hidden');
 }
 
-function renderPickerItems(exercises) {
+function renderCatalogPicker(query) {
   const list = document.getElementById('picker-list');
   list.innerHTML = '';
-  exercises.forEach(ex => {
-    const lastLog = getLastExerciseLog(ex.id);
-    const lastStr = lastLog
-      ? lastLog.sets.map(s => `${s.kg}kg×${s.reps}`).join(' · ')
-      : 'Nessun dato';
-    const item = document.createElement('button');
-    item.type = 'button';
-    item.className = 'picker-item';
-    item.innerHTML = `
-      <div class="picker-item-name">${ex.name_it}</div>
-      <div class="picker-item-day">${ex.sessionName} · ${lastStr}</div>
-    `;
-    item.addEventListener('click', () => { addFreeExercise(ex); closeModal(); });
-    list.appendChild(item);
+
+  if (query) {
+    // Flat filtered list across all groups
+    EXERCISE_CATALOG.forEach(group => {
+      const matches = group.exercises.filter(ex => ex.name.toLowerCase().includes(query));
+      if (!matches.length) return;
+      const header = document.createElement('div');
+      header.className = 'picker-group-header';
+      header.textContent = group.group;
+      list.appendChild(header);
+      matches.forEach(ex => appendCatalogItem(list, ex));
+    });
+  } else {
+    // Grouped with headers
+    EXERCISE_CATALOG.forEach(group => {
+      const header = document.createElement('div');
+      header.className = 'picker-group-header';
+      header.textContent = `${group.group} (${group.exercises.length})`;
+      list.appendChild(header);
+      group.exercises.forEach(ex => appendCatalogItem(list, ex));
+    });
+  }
+}
+
+function appendCatalogItem(list, catEx) {
+  const lastLog = getLastExerciseLog(catEx.id);
+  const lastStr = lastLog
+    ? lastLog.sets.map(s => `${s.kg}kg×${s.reps}`).join(' · ')
+    : '';
+  const item = document.createElement('button');
+  item.type = 'button';
+  item.className = 'picker-item';
+  item.innerHTML = `
+    <div class="picker-item-name">${catEx.name}</div>
+    ${lastStr ? `<div class="picker-item-day">${lastStr}</div>` : ''}
+  `;
+  item.addEventListener('click', () => {
+    if (state.pickerContext === 'session') {
+      addExerciseToSession(catEx);
+    } else {
+      addFreeExercise(catEx);
+    }
+    closeModal();
   });
+  list.appendChild(item);
+}
+
+function addExerciseToSession(catEx) {
+  const sessionEx = {
+    id: catEx.id,
+    name_it: catEx.name,
+    name_en: catEx.name,
+    sets: 3,
+    reps_min: 8,
+    reps_max: 12,
+    rest_seconds: 120,
+    rir_week3: null,
+    optional: false,
+    superset_label: null,
+    note: '',
+    last_set_failure: false,
+  };
+  state.currentSession.exercises.push(sessionEx);
+  state.allCurrentSets[sessionEx.id] = [];
+  renderExerciseList();
+  showToast(`${catEx.name} aggiunto`, 'success');
 }
 
 function addFreeExercise(ex) {
-  state.freeWorkout.push({ exerciseId: ex.id, name: ex.name_it, sets: [] });
+  const name = ex.name_it || ex.name || ex.id;
+  state.freeWorkout.push({ exerciseId: ex.id, name, sets: [] });
   renderFreeWorkout();
 }
 
@@ -499,6 +671,52 @@ async function finishFreeWorkout() {
   if (gh.token && gh.repo) {
     try { await saveLogToGitHub(entry); } catch { /* silent */ }
   }
+}
+
+// ===== SHARE / STRAVA TEXT =====
+function generateShareText() {
+  if (!state.currentSession) return '';
+  const lines = [];
+  for (const ex of state.currentSession.exercises) {
+    const logged = (state.allCurrentSets[ex.id] || []).filter(s => s.reps > 0);
+
+    let setsCount, repsStr;
+    if (logged.length > 0) {
+      setsCount = logged.length;
+      const repsList = logged.map(s => s.reps);
+      const allSame = repsList.every(r => r === repsList[0]);
+      if (allSame) {
+        repsStr = `${repsList[0]}`;
+      } else {
+        const sorted = [...repsList].sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        const median = sorted.length % 2 !== 0
+          ? sorted[mid]
+          : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
+        repsStr = `${median}`;
+      }
+    } else {
+      setsCount = ex.sets || 3;
+      if (ex.duration_seconds) {
+        repsStr = `${ex.duration_seconds}s`;
+      } else {
+        const min = ex.reps_min || 8;
+        const max = ex.reps_max || min;
+        repsStr = `${min === max ? min : Math.round((min + max) / 2)}`;
+      }
+    }
+
+    lines.push(`${ex.name_it} ${setsCount} x ${repsStr} reps`);
+  }
+  return lines.join('\n');
+}
+
+function openShareModal() {
+  const text = generateShareText();
+  document.getElementById('share-text').value = text;
+  hideAllModals();
+  document.getElementById('modal-share').classList.remove('hidden');
+  document.getElementById('modal-overlay').classList.remove('hidden');
 }
 
 // ===== STORICO ESERCIZI =====
@@ -590,7 +808,9 @@ function renderStoricoScreen() {
 function showExerciseHistory(exerciseId, backScreen) {
   state.historyBackScreen = backScreen || 'screen-storico';
   const allExercises = state.config.sessions.flatMap(s => s.exercises);
-  const ex = allExercises.find(e => e.id === exerciseId);
+  const configEx = allExercises.find(e => e.id === exerciseId);
+  const catEx = configEx ? null : EXERCISE_CATALOG.flatMap(g => g.exercises).find(e => e.id === exerciseId);
+  const ex = configEx || (catEx ? { ...catEx, name_it: catEx.name } : null);
   if (!ex) return;
 
   const logs = getExerciseLogs(exerciseId);
@@ -897,7 +1117,27 @@ function setupEventListeners() {
   // Free
   document.getElementById('btn-back-from-free').addEventListener('click', () => showScreen('screen-home'));
   document.getElementById('btn-finish-free').addEventListener('click', finishFreeWorkout);
-  document.getElementById('btn-add-free-exercise').addEventListener('click', openExercisePicker);
+  document.getElementById('btn-add-session-exercise').addEventListener('click', () => openExercisePicker('session'));
+  document.getElementById('btn-share-workout').addEventListener('click', openShareModal);
+  document.getElementById('btn-share-close').addEventListener('click', closeModal);
+  document.getElementById('btn-share-copy').addEventListener('click', () => {
+    const text = document.getElementById('share-text').value;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        closeModal();
+        showToast('Copiato! Incolla su Strava ✓', 'success');
+      }).catch(() => {
+        document.getElementById('share-text').select();
+        showToast('Seleziona e copia manualmente', '');
+      });
+    } else {
+      document.getElementById('share-text').select();
+      document.execCommand('copy');
+      closeModal();
+      showToast('Copiato! Incolla su Strava ✓', 'success');
+    }
+  });
+  document.getElementById('btn-add-free-exercise').addEventListener('click', () => openExercisePicker('free'));
   document.getElementById('btn-picker-cancel').addEventListener('click', closeModal);
 
   // Settings

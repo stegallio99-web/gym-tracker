@@ -816,6 +816,54 @@ button,
 .picker-item:active { background: var(--bg3); }
 .picker-item-name { font-weight: 600; }
 .picker-item-day { font-size: 0.75rem; color: var(--text2); }
+.picker-group-header {
+  padding: 10px 12px 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+.picker-group-header:first-child { border-top: none; margin-top: 0; }
+
+/* ===== WORKOUT BOTTOM ACTIONS ===== */
+.workout-bottom-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+.share-workout-btn {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text2);
+  font-size: 0.9rem;
+  font-family: var(--font);
+  cursor: pointer;
+  text-align: center;
+}
+.share-workout-btn:active { background: var(--bg3); color: var(--text); }
+
+/* ===== SHARE MODAL ===== */
+.share-textarea {
+  width: 100%;
+  min-height: 160px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  padding: 12px;
+  resize: none;
+  margin: 12px 0 4px;
+}
 
 /* ===== TOAST ===== */
 .toast {

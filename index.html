@@ -52,6 +52,10 @@
   <div class="ex-list" id="ex-list">
     <!-- populated by JS -->
   </div>
+  <div class="workout-bottom-actions">
+    <button class="add-set-btn" id="btn-add-session-exercise">+ Aggiungi esercizio</button>
+    <button class="share-workout-btn" id="btn-share-workout">⬆ Condividi</button>
+  </div>
 </div>
 
 <!-- ===== EXERCISE DETAIL (logging sets) ===== -->
@@ -194,6 +198,16 @@
     <div class="picker-list" id="picker-list"></div>
     <div class="modal-actions">
       <button class="modal-cancel" id="btn-picker-cancel">Annulla</button>
+    </div>
+  </div>
+
+  <!-- Share workout modal -->
+  <div id="modal-share" class="modal hidden">
+    <h3 class="modal-title">Condividi allenamento</h3>
+    <textarea id="share-text" class="share-textarea" readonly></textarea>
+    <div class="modal-actions">
+      <button class="modal-cancel" id="btn-share-close">Chiudi</button>
+      <button class="modal-confirm" id="btn-share-copy">Copia</button>
     </div>
   </div>
 
