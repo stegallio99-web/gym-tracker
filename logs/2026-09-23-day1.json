@@ -1,0 +1,139 @@
+{
+  "date": "2026-09-23",
+  "sessionId": "day1",
+  "sessionName": "Day 1 — PUSH",
+  "week": 1,
+  "exercises": [
+    {
+      "exerciseId": "bench_press_barbell",
+      "sets": [
+        {
+          "kg": 20,
+          "reps": 6
+        },
+        {
+          "kg": 20,
+          "reps": 8
+        },
+        {
+          "kg": 25,
+          "reps": 4
+        },
+        {
+          "kg": 22.5,
+          "reps": 6
+        },
+        {
+          "kg": 22.5,
+          "reps": 6
+        }
+      ]
+    },
+    {
+      "exerciseId": "seated_db_shoulder_press",
+      "sets": [
+        {
+          "kg": 16,
+          "reps": 10
+        },
+        {
+          "kg": 20,
+          "reps": 6
+        },
+        {
+          "kg": 20,
+          "reps": 6
+        }
+      ]
+    },
+    {
+      "exerciseId": "low_cable_fly",
+      "sets": [
+        {
+          "kg": 7.5,
+          "reps": 12
+        },
+        {
+          "kg": 8.75,
+          "reps": 12
+        },
+        {
+          "kg": 10,
+          "reps": 12
+        }
+      ]
+    },
+    {
+      "exerciseId": "overhead_tricep_ext_ez",
+      "sets": [
+        {
+          "kg": 5,
+          "reps": 12
+        },
+        {
+          "kg": 10,
+          "reps": 10
+        },
+        {
+          "kg": 12.5,
+          "reps": 7
+        }
+      ]
+    },
+    {
+      "exerciseId": "cable_lateral_raise",
+      "sets": [
+        {
+          "kg": 5,
+          "reps": 12
+        },
+        {
+          "kg": 5,
+          "reps": 12
+        },
+        {
+          "kg": 5,
+          "reps": 12
+        }
+      ]
+    },
+    {
+      "exerciseId": "tricep_rope_pushdown",
+      "sets": [
+        {
+          "kg": 15,
+          "reps": 12
+        },
+        {
+          "kg": 17.5,
+          "reps": 10
+        },
+        {
+          "kg": 20,
+          "reps": 12
+        }
+      ]
+    },
+    {
+      "exerciseId": "hanging_knee_raise",
+      "sets": [
+        {
+          "kg": 0,
+          "reps": 12
+        },
+        {
+          "kg": 0,
+          "reps": 12
+        },
+        {
+          "kg": 0,
+          "reps": 12
+        },
+        {
+          "kg": 0,
+          "reps": 12
+        }
+      ]
+    }
+  ]
+}
