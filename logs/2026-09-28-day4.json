@@ -1,0 +1,152 @@
+{
+  "date": "2026-09-28",
+  "sessionId": "day4",
+  "sessionName": "Day 4 — UPPER",
+  "week": 1,
+  "exercises": [
+    {
+      "exerciseId": "incline_db_press",
+      "sets": [
+        {
+          "kg": 20,
+          "reps": 12
+        },
+        {
+          "kg": 22,
+          "reps": 10
+        },
+        {
+          "kg": 24,
+          "reps": 10
+        },
+        {
+          "kg": 26,
+          "reps": 7
+        }
+      ]
+    },
+    {
+      "exerciseId": "barbell_row",
+      "sets": [
+        {
+          "kg": 20,
+          "reps": 10
+        },
+        {
+          "kg": 25,
+          "reps": 8
+        },
+        {
+          "kg": 15,
+          "reps": 10
+        },
+        {
+          "kg": 15,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "chest_supported_row",
+      "sets": [
+        {
+          "kg": 18,
+          "reps": 10
+        },
+        {
+          "kg": 22,
+          "reps": 10
+        },
+        {
+          "kg": 26,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "ez_skull_crusher",
+      "sets": [
+        {
+          "kg": 5,
+          "reps": 12
+        },
+        {
+          "kg": 7.5,
+          "reps": 12
+        },
+        {
+          "kg": 10,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "pec_deck",
+      "sets": [
+        {
+          "kg": 50,
+          "reps": 10
+        },
+        {
+          "kg": 50,
+          "reps": 10
+        },
+        {
+          "kg": 50,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "db_lateral_raise",
+      "sets": [
+        {
+          "kg": 10,
+          "reps": 12
+        },
+        {
+          "kg": 10,
+          "reps": 15
+        },
+        {
+          "kg": 10,
+          "reps": 15
+        }
+      ]
+    },
+    {
+      "exerciseId": "preacher_curl_ez",
+      "sets": [
+        {
+          "kg": 10,
+          "reps": 10
+        },
+        {
+          "kg": 10,
+          "reps": 10
+        },
+        {
+          "kg": 10,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "cat_095",
+      "sets": [
+        {
+          "kg": 0,
+          "reps": 25
+        },
+        {
+          "kg": 0,
+          "reps": 25
+        },
+        {
+          "kg": 0,
+          "reps": 25
+        }
+      ]
+    }
+  ]
+}
