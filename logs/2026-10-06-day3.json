@@ -1,0 +1,131 @@
+{
+  "date": "2026-10-06",
+  "sessionId": "day3",
+  "sessionName": "Day 3 — LOWER A",
+  "week": 1,
+  "exercises": [
+    {
+      "exerciseId": "barbell_back_squat",
+      "sets": [
+        {
+          "kg": 90,
+          "reps": 9
+        },
+        {
+          "kg": 110,
+          "reps": 6
+        },
+        {
+          "kg": 120,
+          "reps": 6
+        },
+        {
+          "kg": 130,
+          "reps": 5
+        }
+      ]
+    },
+    {
+      "exerciseId": "bulgarian_split_squat",
+      "sets": [
+        {
+          "kg": 20,
+          "reps": 8
+        },
+        {
+          "kg": 22,
+          "reps": 8
+        },
+        {
+          "kg": 24,
+          "reps": 8
+        }
+      ]
+    },
+    {
+      "exerciseId": "leg_extension",
+      "sets": [
+        {
+          "kg": 70,
+          "reps": 10
+        },
+        {
+          "kg": 75,
+          "reps": 10
+        },
+        {
+          "kg": 80,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "seated_leg_curl",
+      "sets": [
+        {
+          "kg": 67.5,
+          "reps": 10
+        },
+        {
+          "kg": 62.5,
+          "reps": 10
+        },
+        {
+          "kg": 62.5,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "rkc_plank",
+      "sets": [
+        {
+          "kg": 0,
+          "reps": 60
+        },
+        {
+          "kg": 0,
+          "reps": 60
+        },
+        {
+          "kg": 0,
+          "reps": 75
+        }
+      ]
+    },
+    {
+      "exerciseId": "cat_088",
+      "sets": [
+        {
+          "kg": 45,
+          "reps": 10
+        },
+        {
+          "kg": 55,
+          "reps": 10
+        },
+        {
+          "kg": 55,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "cat_090",
+      "sets": [
+        {
+          "kg": 40,
+          "reps": 10
+        },
+        {
+          "kg": 50,
+          "reps": 10
+        },
+        {
+          "kg": 40,
+          "reps": 10
+        }
+      ]
+    }
+  ]
+}
