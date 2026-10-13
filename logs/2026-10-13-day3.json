@@ -1,0 +1,118 @@
+{
+  "date": "2026-10-13",
+  "sessionId": "day3",
+  "sessionName": "Day 3 — LOWER A",
+  "week": 1,
+  "exercises": [
+    {
+      "exerciseId": "barbell_back_squat",
+      "sets": [
+        {
+          "kg": 100,
+          "reps": 8
+        },
+        {
+          "kg": 120,
+          "reps": 6
+        },
+        {
+          "kg": 130,
+          "reps": 5
+        },
+        {
+          "kg": 140,
+          "reps": 4
+        }
+      ]
+    },
+    {
+      "exerciseId": "bulgarian_split_squat",
+      "sets": [
+        {
+          "kg": 22,
+          "reps": 8
+        },
+        {
+          "kg": 22,
+          "reps": 8
+        },
+        {
+          "kg": 24,
+          "reps": 8
+        }
+      ]
+    },
+    {
+      "exerciseId": "leg_extension",
+      "sets": [
+        {
+          "kg": 65,
+          "reps": 10
+        },
+        {
+          "kg": 70,
+          "reps": 12
+        },
+        {
+          "kg": 80,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "seated_leg_curl",
+      "sets": [
+        {
+          "kg": 62.5,
+          "reps": 10
+        },
+        {
+          "kg": 67.5,
+          "reps": 10
+        },
+        {
+          "kg": 62.5,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "standing_calf_raise",
+      "sets": [
+        {
+          "kg": 60,
+          "reps": 15
+        },
+        {
+          "kg": 80,
+          "reps": 15
+        },
+        {
+          "kg": 100,
+          "reps": 10
+        },
+        {
+          "kg": 110,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "rkc_plank",
+      "sets": [
+        {
+          "kg": 0,
+          "reps": 75
+        },
+        {
+          "kg": 0,
+          "reps": 75
+        },
+        {
+          "kg": 0,
+          "reps": 90
+        }
+      ]
+    }
+  ]
+}
