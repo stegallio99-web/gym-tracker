@@ -1,0 +1,131 @@
+{
+  "date": "2026-10-14",
+  "sessionId": "day4",
+  "sessionName": "Day 4 — UPPER",
+  "week": 1,
+  "exercises": [
+    {
+      "exerciseId": "incline_db_press",
+      "sets": [
+        {
+          "kg": 22,
+          "reps": 10
+        },
+        {
+          "kg": 24,
+          "reps": 8
+        },
+        {
+          "kg": 24,
+          "reps": 7
+        },
+        {
+          "kg": 24,
+          "reps": 8
+        }
+      ]
+    },
+    {
+      "exerciseId": "barbell_row",
+      "sets": [
+        {
+          "kg": 20,
+          "reps": 10
+        },
+        {
+          "kg": 25,
+          "reps": 8
+        },
+        {
+          "kg": 25,
+          "reps": 9
+        }
+      ]
+    },
+    {
+      "exerciseId": "chest_supported_row",
+      "sets": [
+        {
+          "kg": 24,
+          "reps": 10
+        },
+        {
+          "kg": 28,
+          "reps": 12
+        },
+        {
+          "kg": 30,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "ez_skull_crusher",
+      "sets": [
+        {
+          "kg": 10,
+          "reps": 10
+        },
+        {
+          "kg": 11.25,
+          "reps": 10
+        },
+        {
+          "kg": 11.25,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "pec_deck",
+      "sets": [
+        {
+          "kg": 50,
+          "reps": 10
+        },
+        {
+          "kg": 52.5,
+          "reps": 10
+        },
+        {
+          "kg": 52.5,
+          "reps": 8
+        }
+      ]
+    },
+    {
+      "exerciseId": "db_lateral_raise",
+      "sets": [
+        {
+          "kg": 10,
+          "reps": 15
+        },
+        {
+          "kg": 10,
+          "reps": 12
+        },
+        {
+          "kg": 10,
+          "reps": 15
+        }
+      ]
+    },
+    {
+      "exerciseId": "preacher_curl_ez",
+      "sets": [
+        {
+          "kg": 10,
+          "reps": 10
+        },
+        {
+          "kg": 12.5,
+          "reps": 8
+        },
+        {
+          "kg": 12.5,
+          "reps": 8
+        }
+      ]
+    }
+  ]
+}
