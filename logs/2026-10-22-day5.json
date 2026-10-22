@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-22",
+  "sessionId": "day5",
+  "sessionName": "Day 5 — LOWER B",
+  "week": 1,
+  "exercises": [
+    {
+      "exerciseId": "rdl_barbell",
+      "sets": [
+        {
+          "kg": 35,
+          "reps": 8
+        },
+        {
+          "kg": 40,
+          "reps": 8
+        },
+        {
+          "kg": 45,
+          "reps": 8
+        },
+        {
+          "kg": 45,
+          "reps": 8
+        }
+      ]
+    },
+    {
+      "exerciseId": "barbell_hip_thrust",
+      "sets": [
+        {
+          "kg": 30,
+          "reps": 10
+        },
+        {
+          "kg": 40,
+          "reps": 10
+        },
+        {
+          "kg": 45,
+          "reps": 8
+        }
+      ]
+    },
+    {
+      "exerciseId": "nordic_hamstring_curl",
+      "sets": [
+        {
+          "kg": 20,
+          "reps": 10
+        },
+        {
+          "kg": 20,
+          "reps": 10
+        },
+        {
+          "kg": 25,
+          "reps": 8
+        }
+      ]
+    },
+    {
+      "exerciseId": "seated_calf_raise",
+      "sets": [
+        {
+          "kg": 20,
+          "reps": 10
+        },
+        {
+          "kg": 20,
+          "reps": 12
+        },
+        {
+          "kg": 20,
+          "reps": 10
+        },
+        {
+          "kg": 20,
+          "reps": 10
+        }
+      ]
+    }
+  ]
+}
