@@ -1,0 +1,127 @@
+{
+  "date": "2026-10-26",
+  "sessionId": "day2",
+  "sessionName": "Day 2 — PULL",
+  "week": 1,
+  "exercises": [
+    {
+      "exerciseId": "lat_pulldown_wide",
+      "sets": [
+        {
+          "kg": 50,
+          "reps": 10
+        },
+        {
+          "kg": 55,
+          "reps": 10
+        },
+        {
+          "kg": 60,
+          "reps": 8
+        },
+        {
+          "kg": 60,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "lat_pulldown_neutral",
+      "sets": [
+        {
+          "kg": 60,
+          "reps": 8
+        },
+        {
+          "kg": 55,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "dumbbell_pullover",
+      "sets": [
+        {
+          "kg": 26,
+          "reps": 10
+        },
+        {
+          "kg": 28,
+          "reps": 12
+        },
+        {
+          "kg": 28,
+          "reps": 12
+        }
+      ]
+    },
+    {
+      "exerciseId": "cable_face_pull",
+      "sets": [
+        {
+          "kg": 25,
+          "reps": 12
+        },
+        {
+          "kg": 27.5,
+          "reps": 15
+        },
+        {
+          "kg": 27.5,
+          "reps": 15
+        }
+      ]
+    },
+    {
+      "exerciseId": "ez_bar_curl",
+      "sets": [
+        {
+          "kg": 10,
+          "reps": 10
+        },
+        {
+          "kg": 11.25,
+          "reps": 9
+        },
+        {
+          "kg": 11.25,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "hammer_curl",
+      "sets": [
+        {
+          "kg": 12,
+          "reps": 10
+        },
+        {
+          "kg": 12,
+          "reps": 10
+        },
+        {
+          "kg": 12,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "pallof_press",
+      "sets": [
+        {
+          "kg": 12.5,
+          "reps": 20
+        },
+        {
+          "kg": 15,
+          "reps": 20
+        },
+        {
+          "kg": 15,
+          "reps": 20
+        }
+      ]
+    }
+  ]
+}
