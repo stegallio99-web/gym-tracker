@@ -1,0 +1,97 @@
+{
+  "date": "2026-11-22",
+  "sessionId": "day3",
+  "sessionName": "Day 3 — LOWER A",
+  "week": 1,
+  "exercises": [
+    {
+      "exerciseId": "barbell_back_squat",
+      "sets": [
+        {
+          "kg": 90,
+          "reps": 10
+        },
+        {
+          "kg": 110,
+          "reps": 7
+        },
+        {
+          "kg": 110,
+          "reps": 7
+        },
+        {
+          "kg": 110,
+          "reps": 7
+        }
+      ]
+    },
+    {
+      "exerciseId": "bulgarian_split_squat",
+      "sets": [
+        {
+          "kg": 22,
+          "reps": 10
+        },
+        {
+          "kg": 22,
+          "reps": 11
+        },
+        {
+          "kg": 22,
+          "reps": 11
+        }
+      ]
+    },
+    {
+      "exerciseId": "leg_extension",
+      "sets": [
+        {
+          "kg": 70,
+          "reps": 10
+        },
+        {
+          "kg": 80,
+          "reps": 10
+        },
+        {
+          "kg": 85,
+          "reps": 9
+        }
+      ]
+    },
+    {
+      "exerciseId": "cat_079",
+      "sets": [
+        {
+          "kg": 35,
+          "reps": 10
+        },
+        {
+          "kg": 40,
+          "reps": 10
+        },
+        {
+          "kg": 40,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "cat_091",
+      "sets": [
+        {
+          "kg": 100,
+          "reps": 15
+        },
+        {
+          "kg": 130,
+          "reps": 15
+        },
+        {
+          "kg": 130,
+          "reps": 15
+        }
+      ]
+    }
+  ]
+}
