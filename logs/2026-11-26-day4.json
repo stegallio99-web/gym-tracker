@@ -1,0 +1,135 @@
+{
+  "date": "2026-11-26",
+  "sessionId": "day4",
+  "sessionName": "Day 4 — UPPER",
+  "week": 1,
+  "exercises": [
+    {
+      "exerciseId": "incline_db_press",
+      "sets": [
+        {
+          "kg": 24,
+          "reps": 10
+        },
+        {
+          "kg": 26,
+          "reps": 10
+        },
+        {
+          "kg": 26,
+          "reps": 9
+        },
+        {
+          "kg": 26,
+          "reps": 8
+        }
+      ]
+    },
+    {
+      "exerciseId": "barbell_row",
+      "sets": [
+        {
+          "kg": 25,
+          "reps": 12
+        },
+        {
+          "kg": 30,
+          "reps": 8
+        },
+        {
+          "kg": 30,
+          "reps": 9
+        },
+        {
+          "kg": 30,
+          "reps": 8
+        }
+      ]
+    },
+    {
+      "exerciseId": "chest_supported_row",
+      "sets": [
+        {
+          "kg": 32,
+          "reps": 10
+        },
+        {
+          "kg": 32,
+          "reps": 10
+        },
+        {
+          "kg": 32,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "ez_skull_crusher",
+      "sets": [
+        {
+          "kg": 12.5,
+          "reps": 10
+        },
+        {
+          "kg": 12.5,
+          "reps": 10
+        },
+        {
+          "kg": 12.5,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "pec_deck",
+      "sets": [
+        {
+          "kg": 50,
+          "reps": 10
+        },
+        {
+          "kg": 55,
+          "reps": 10
+        },
+        {
+          "kg": 55,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "cat_032",
+      "sets": [
+        {
+          "kg": 5,
+          "reps": 10
+        },
+        {
+          "kg": 5,
+          "reps": 10
+        },
+        {
+          "kg": 5,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "exerciseId": "cat_042",
+      "sets": [
+        {
+          "kg": 12,
+          "reps": 10
+        },
+        {
+          "kg": 14,
+          "reps": 10
+        },
+        {
+          "kg": 14,
+          "reps": 10
+        }
+      ]
+    }
+  ]
+}
